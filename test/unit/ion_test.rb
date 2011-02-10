@@ -78,7 +78,7 @@ class IonTest < Test::Unit::TestCase
     @album1 = Album.create title: "Hey there you", body: "Yes you"
     @album2 = Album.create title: "Yes there it is", body: "Haha"
 
-    search = Album.ion.search { with :title, "yes" }
+    search = Album.ion.search { keywords "yes", in: :title }
     ids    = search.results.map(&:id).sort
   end
 end
