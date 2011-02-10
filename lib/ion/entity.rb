@@ -6,16 +6,7 @@ module Ion::Entity
   def update_ion_indices
     # Call me after saving
     ion = self.class.ion
-    key = ion.key
-    id  = self.id
-
-    ion.fields.each do |name, field|
-      value    = self.send(name)
-      keywords = Ion::Stringer.keywords(value)
-      keywords.each do |word|
-        key[:keywords][name][word].sadd id
-      end
-    end
+    ion.indices.each { |_, index| index.index(self) }
   end
 
   module ClassMethods

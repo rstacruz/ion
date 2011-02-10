@@ -1,10 +1,10 @@
 class Ion::Options
   attr_reader :model
-  attr_reader :fields
+  attr_reader :indices
 
   def initialize(model)
     @model = model
-    @fields = Hash.new
+    @indices = Hash.new
   end
 
   def search(&blk)
@@ -29,7 +29,7 @@ protected
   end
 
   def field(type, id, options={})
-    @fields[id.to_sym] = options
+    @indices[id.to_sym] = Ion::Indices::Text.new(id, self, options)
   end
 end
 

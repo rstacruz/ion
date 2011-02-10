@@ -8,6 +8,7 @@ module Ion
   autoload :Options,  "#{PREFIX}/options"
   autoload :Search,   "#{PREFIX}/search"
   autoload :Entity,   "#{PREFIX}/entity"
+  autoload :Index,    "#{PREFIX}/index"
 
   module Indices
     autoload :Text,   "#{PREFIX}/indices/text"
@@ -15,6 +16,22 @@ module Ion
 
   def self.key
     @key ||= Nest.new('Ion')
+  end
+
+  # Returns a new temporary key.
+  def self.volatile_key(ttl=30)
+    k = key['~'][rand.to_s]
+    k.expire ttl  if ttl > 0
+    k
+  end
+
+  # Combines multiple set keys.
+  def self.union(keys)
+    return keys.first  if keys.size == 1
+
+    results = Ion.volatile_key
+    keys.each { |key| results.sunionstore results, key }
+    results
   end
 end
 
