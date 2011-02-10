@@ -19,3 +19,8 @@ module Ion
 end
 
 # Ion:MODEL:keywords:FIELD:word
+#
+# Refactor todo:
+# - Ion::Options should spawn Indices
+# - Ion::Search#results should defer to Indices
+# - Ion::Entity#update_ion_indices should defer to Indices
