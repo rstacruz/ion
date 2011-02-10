@@ -1,0 +1,6 @@
+Testing
+-------
+
+    redis-server
+    rvm gemset import
+    rake test

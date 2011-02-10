@@ -1,0 +1,7 @@
+# .gems generated gem export file. Note that any env variable settings will be missing. Append these after using a ';' field separator
+contest -v0.1.2
+ffaker -v1.2.0
+nest -v1.1.0
+ohm -v0.1.3
+ohm-contrib -v0.1.1
+redis -v2.1.1
