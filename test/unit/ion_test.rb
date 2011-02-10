@@ -2,7 +2,9 @@
 # Sample
 require 'test_helper'
 
-class Album < Ohm::Model
+module IT; end
+
+class IT::Album < Ohm::Model
   include Ion::Entity
   include Ohm::Callbacks
 
@@ -17,6 +19,7 @@ class Album < Ohm::Model
   after :save, :update_ion_indices
 end
 
+Album = IT::Album
 
 class IonTest < Test::Unit::TestCase
   setup do
@@ -24,7 +27,7 @@ class IonTest < Test::Unit::TestCase
     10.times { Album.create title: Faker::Company.bs, body: '' }
   end
 
-  test "foo" do
+  test "single result" do
     @album = Album.create title: "Vloop", body: "Secher Betrib"
     search = Album.ion.search { keywords "Vloop" }
 
@@ -32,34 +35,36 @@ class IonTest < Test::Unit::TestCase
     assert_equal @album.id, search.results.first.id
   end
 
-  test "many" do
+  test "many results" do
     albums = (0..10).map {
       Album.create title: "Yo " + Faker::Company.bs, body: "Moshen Kashkan"
     }
+
     search = Album.ion.search { keywords "Yo" }
+    ids = search.results.map(&:id).sort
 
     assert_equal albums.size, search.results.size
-
-    ids = search.results.map(&:id).sort
 
     albums.each do |album|
       assert ids.include?(album.id)
     end
   end
 
-  test "multi" do
+  test "multi keywords" do
     @album = Album.create title: "Hey there you"
-    search = Album.ion.search { keywords "Hey there you" }
 
+    search = Album.ion.search { keywords "Hey there you" }
     ids = search.results.map(&:id).sort
+
     assert_equal [@album.id], ids
   end
 
   test "search with arity" do
     @album = Album.create title: "Hey there you"
-    search = Album.ion.search { |q| q.keywords "Hey there you" }
 
+    search = Album.ion.search { |q| q.keywords "Hey there you" }
     ids = search.results.map(&:id).sort
+
     assert_equal [@album.id], ids
   end
 
@@ -67,6 +72,8 @@ class IonTest < Test::Unit::TestCase
     return #pending
     @album1 = Album.create title: "Hey there you", body: "Yes you"
     @album2 = Album.create title: "Yes there it is", body: "Haha"
+
     search = Album.ion.search { with :title, "yes" }
+    ids = search.results.map(&:id).sort
   end
 end

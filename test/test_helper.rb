@@ -13,7 +13,7 @@ require 'contest'
 class Test::Unit::TestCase
   def setup
     re = Redis.current
-    keys = re.keys("Ion:*") + re.keys("Album:*")
+    keys = re.keys("Ion:*") + re.keys("IT::*")
     re.del(*keys)  if keys.any?
   end
 end
