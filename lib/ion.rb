@@ -33,6 +33,16 @@ module Ion
     keys.each { |key| results.sunionstore results, key }
     results
   end
+
+  # Finds the intersection in multiple set keys.
+  def self.intersect(keys)
+    return keys.first  if keys.size == 1
+
+    results = Ion.volatile_key
+    results.sunionstore keys.first
+    keys[1..-1].each { |key| results.sinterstore results, key }
+    results
+  end
 end
 
 # Ion:MODEL:keywords:FIELD:word

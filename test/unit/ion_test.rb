@@ -64,6 +64,15 @@ class IonTest < Test::Unit::TestCase
     assert_equal [@album.id], ids
   end
 
+  test "multi keywords fail" do
+    @album = Album.create title: "Krambos chortluus"
+
+    search = Album.ion.search { keywords "krambos lol" }
+    ids    = search.results.map(&:id).sort
+
+    assert_equal [], ids
+  end
+
   test "search with arity" do
     @album = Album.create title: "Shifah loknom"
 

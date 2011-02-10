@@ -13,7 +13,7 @@ class Ion::Indices::Text < Ion::Index
     words   = Ion::Stringer.keywords(search.keywords)
     keys    = words.map { |word| keywords_key[word] }
 
-    Ion.union keys
+    Ion.intersect keys
   end
 
 protected
