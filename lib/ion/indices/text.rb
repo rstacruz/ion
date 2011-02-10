@@ -1,12 +1,9 @@
 class Ion::Indices::Text < Ion::Index
   def index(record)
-    model    = record.class
-    value    = record.send(self.name)
-    keywords = Ion::Stringer.keywords(value)
+    value = record.send(self.name)
+    words = Ion::Stringer.keywords(value)
 
-    keywords.each do |word|
-      keywords_key[word].sadd record.id
-    end
+    words.each { |word| keywords_key[word].sadd record.id }
   end
 
   def search(search)

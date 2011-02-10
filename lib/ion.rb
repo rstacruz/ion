@@ -25,6 +25,9 @@ module Ion
     k
   end
 
+  # Redis helper stuff
+  # Probably best to move this somewhere
+
   # Combines multiple set keys.
   def self.union(keys)
     return keys.first  if keys.size == 1

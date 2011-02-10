@@ -16,5 +16,8 @@ class Test::Unit::TestCase
     keys = re.keys("Ion:*") + re.keys("IT::*")
     re.del(*keys)  if keys.any?
   end
-end
 
+  def sorted_ids(search)
+    search.to_a.map(&:id).sort
+  end
+end

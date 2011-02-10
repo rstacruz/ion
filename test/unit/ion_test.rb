@@ -21,13 +21,6 @@ end
 
 Album = IT::Album
 
-# Add .some helper methods
-class Ion::Search
-  def _sorted_ids
-    @sorted_ids ||= results.map(&:id).sort
-  end
-end
-
 class IonTest < Test::Unit::TestCase
   setup do
     # Fake entries that should NOT be returned
@@ -58,28 +51,28 @@ class IonTest < Test::Unit::TestCase
     search = Album.ion.search { keywords "Yo" }
 
     assert_equal albums.size, search.results.size
-    assert_equal albums.map(&:id).sort, search._sorted_ids
+    assert_equal albums.map(&:id).sort, sorted_ids(search)
   end
 
   test "multi keywords" do
-    @album = Album.create title: "Krambos chortluus"
+    @album = Album.create title: "Callay Krambos Chortluus secher glibbet"
     search = Album.ion.search { keywords "krambos chortluus" }
 
-    assert_equal [@album.id], search._sorted_ids
+    assert_equal [@album.id], sorted_ids(search)
   end
 
   test "multi keywords fail" do
     @album = Album.create title: "Krambos chortluus"
     search = Album.ion.search { keywords "krambos lol" }
 
-    assert_equal [], search._sorted_ids
+    assert_equal [], sorted_ids(search)
   end
 
   test "search with arity" do
     @album = Album.create title: "Shifah loknom"
     search = Album.ion.search { |q| q.keywords "shifah loknom" }
 
-    assert_equal [@album.id], search._sorted_ids
+    assert_equal [@album.id], sorted_ids(search)
   end
 
   test "with" do
