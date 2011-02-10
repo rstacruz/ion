@@ -20,7 +20,7 @@ end
 
 class IonTest < Test::Unit::TestCase
   setup do
-    # Fake entries
+    # Fake entries that should NOT be returned
     10.times { Album.create title: Faker::Company.bs, body: '' }
   end
 
@@ -53,5 +53,20 @@ class IonTest < Test::Unit::TestCase
 
     ids = search.results.map(&:id).sort
     assert_equal [@album.id], ids
+  end
+
+  test "search with arity" do
+    @album = Album.create title: "Hey there you"
+    search = Album.ion.search { |q| q.keywords "Hey there you" }
+
+    ids = search.results.map(&:id).sort
+    assert_equal [@album.id], ids
+  end
+
+  test "with" do
+    return #pending
+    @album1 = Album.create title: "Hey there you", body: "Yes you"
+    @album2 = Album.create title: "Yes there it is", body: "Haha"
+    search = Album.ion.search { with :title, "yes" }
   end
 end

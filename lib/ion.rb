@@ -32,7 +32,13 @@ class Ion::Options
 
   def search(&blk)
     search = Ion::Search.new(self)
-    search.instance_eval(&blk)  if block_given?
+    if block_given?
+      if blk.arity == 0
+        search.instance_eval(&blk)
+      else
+        blk.yield(search)
+      end
+    end
     search
   end
 
