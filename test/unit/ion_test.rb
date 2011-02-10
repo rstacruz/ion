@@ -35,34 +35,39 @@ class IonTest < Test::Unit::TestCase
     assert_equal @album.id, search.results.first.id
   end
 
+  test "stripping punctuations" do
+    @album = Album.create title: "Vloop", body: "Les faux-tambros rafalo."
+    search = Album.ion.search { keywords "faux rafalo" }
+
+    assert_equal 1, search.results.size
+    assert_equal @album.id, search.results.first.id
+  end
+
   test "many results" do
     albums = (0..10).map {
       Album.create title: "Yo " + Faker::Company.bs, body: "Moshen Kashkan"
     }
 
     search = Album.ion.search { keywords "Yo" }
-    ids = search.results.map(&:id).sort
+    ids    = search.results.map(&:id).sort
 
     assert_equal albums.size, search.results.size
-
-    albums.each do |album|
-      assert ids.include?(album.id)
-    end
+    assert_equal albums.map(&:id).sort, ids
   end
 
   test "multi keywords" do
-    @album = Album.create title: "Hey there you"
+    @album = Album.create title: "Krambos chortluus"
 
-    search = Album.ion.search { keywords "Hey there you" }
-    ids = search.results.map(&:id).sort
+    search = Album.ion.search { keywords "krambos chortluus" }
+    ids    = search.results.map(&:id).sort
 
     assert_equal [@album.id], ids
   end
 
   test "search with arity" do
-    @album = Album.create title: "Hey there you"
+    @album = Album.create title: "Shifah loknom"
 
-    search = Album.ion.search { |q| q.keywords "Hey there you" }
+    search = Album.ion.search { |q| q.keywords "shifah loknom" }
     ids = search.results.map(&:id).sort
 
     assert_equal [@album.id], ids
@@ -74,6 +79,6 @@ class IonTest < Test::Unit::TestCase
     @album2 = Album.create title: "Yes there it is", body: "Haha"
 
     search = Album.ion.search { with :title, "yes" }
-    ids = search.results.map(&:id).sort
+    ids    = search.results.map(&:id).sort
   end
 end

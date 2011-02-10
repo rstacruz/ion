@@ -72,7 +72,7 @@ class Ion::Search
     words = Ion::Stringer.keywords(@keywords)
     results = Array.new
 
-    fields = [:title] #stub
+    fields = @options.fields.keys
     fields.each do |field|
       key = @options.key[:keywords][field]
       words.each do |word|
