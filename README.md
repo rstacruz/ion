@@ -23,11 +23,11 @@ Ion needs Redis.
     require 'ion'
     Ion.connect url: 'redis://127.0.0.1:6379/0'
 
-Any ORM will do.
+Any ORM will do. As long as you can hook it to update Ion's indices, you'll be fine.
 
     class Album < Ohm::Model
       include Ion::Entity
-      include Ohm::Callbacks  # for `after`
+      include Ohm::Callbacks  # for `after` and `before`
 
       # Say you have these fields
       attribute :name
@@ -39,31 +39,31 @@ Any ORM will do.
         metaphone :description
       }
 
-      # Just call this after saving
+      # Just call this after saving/deleting
       after  :save,   :update_ion_indices
       before :delete, :delete_ion_indices
     end
 
-Then search like so!
+Searching is easy:
 
-    search = Album.ion.search {
+    results = Album.ion.search {
       text :title, "Dancing Galaxy"
     }
 
-    search = Album.ion.search {
+    results = Album.ion.search {
       metaphone :artist, "Astral Projection"
     }
 
-The search will be an `Enumerable` so just use it like so.
+The search will be an `Enumerable` object. Go ahead and iterate as you normally would.
 
-    search.each do |album|
+    results.each do |album|
       puts "Album '#{album.name}' (by #{album.artist})"
     end
 
 You can also get the raw results easily.
 
-    search.to_a  #=> [<#Album>, <#Album>, ... ]
-    search.ids   #=> ["1", "2", "10", ... ]
+    results.to_a  #=> [<#Album>, <#Album>, ... ]
+    results.ids   #=> ["1", "2", "10", ... ]
 
 More neat stuff
 ---------------
@@ -86,13 +86,14 @@ Extending
 Override it with some fancy stuff.
 
     class Ion::Search
-      def to_ohm_set
-        # `key` is a key to a Redis set.
-        Ohm::Set.new(key, model)
+      def to_ohm
+        set_key = model.key['~']['mysearch']
+        ids.each { |id| set_key.sadd id }
+        Ohm::Set.new(set_key, model)
       end
     end
 
-    set = Album.ion.search { ... }.to_ohm_set
+    set = Album.ion.search { ... }.to_ohm
 
 Or extend the DSL
 
@@ -118,7 +119,11 @@ Stuff that's not implemented yet
       }
     end
 
-    search = Item.ion.search {
+    Item.ion.search {                  # TODO: Quoted searching
+      text :title, 'apple "MacBook Pro"'
+    }
+
+    results = Item.ion.search {
       any_of {                         # TODO: any_of and all_of
         text :title, "Mac book"
         text :title, "Macbook"
@@ -126,21 +131,21 @@ Stuff that's not implemented yet
         number :stock, gt: 3
       }
       score(2.0) {                     # TODO: important searches (+relevance)
-        text :title, "Pro"             # This will be more important (by 2x) than others
+        text :title, "Pro"             #       This will be more important (by 2x) than others
       }
-      boost(2.0) {                     # TODO: boost relevance
-        text :brand, "Apple"           # Will boost if brand == "Apple", but will
-                                       # not return all Apple results
+      boost(2.0) {                     # TODO: Boost relevance
+        text :brand, "Apple"           #       Will boost if brand == "Apple", but will
+                                       #       not return all Apple results
       }
       exclude {                        # TODO: exclusions
         text :title, "Case"
       }
     }
 
-    search.sort_by :title
+    results.sort_by :title
+    results.range from: 54, limit: 10
 
-    search.range from: 54, limit: 10
-    search.paginate page: 1, limit: 30
-    search.pages
+    results.paginate page: 1, limit: 30
+    results.pages
 
-    search.facet_counts #=> { :name => { "Ape" => 2, "Banana" => 3 } } ??
+    results.facet_counts #=> { :name => { "Ape" => 2, "Banana" => 3 } } ??
