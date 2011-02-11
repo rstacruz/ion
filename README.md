@@ -8,8 +8,9 @@ Don't use me!
 Testing
 -------
 
+    rvm 1.9.2-p136@ion --rvmrc --create
     redis-server
-    rvm gemset import
+    rvm gemset import  # or install gems in .gems
     rake test
 
 Usage
