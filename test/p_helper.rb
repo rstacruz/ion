@@ -17,7 +17,7 @@ module Kernel
 
     # YAMLify the last arg if it's YAMLable
     if args.last.is_a?(Hash) || args.last.is_a?(Array)
-      lines += args.pop.to_yaml.split("\n")[1..-1]
+      lines = args.pop.to_yaml.split("\n")[1..-1].map { |s| "  #{s}" }
     end
 
     # Inspect everything else
@@ -25,7 +25,7 @@ module Kernel
 
     # Print
     print "\n"
-    puts pre % [source] + lines.shift
-    puts lines.map { |s| pre % [''] + "  " + s }.join("\n")  if  lines.any?
+    puts pre % [source] + (lines.shift || "nil")
+    puts lines.map { |s| pre % [''] + s }.join("\n")  if  lines.any?
   end
 end
