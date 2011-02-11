@@ -38,7 +38,8 @@ class IT::Album < Ohm::Model
     text(:also_title) { self.title }
   }
 
-  after :save, :update_ion_indices
+  after  :save,   :update_ion_indices
+  before :delete, :delete_ion_indices
 end
 
 Album = IT::Album

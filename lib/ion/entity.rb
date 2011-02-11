@@ -6,7 +6,15 @@ module Ion::Entity
   def update_ion_indices
     # Call me after saving
     ion = self.class.ion
+    ion.index_types.each { |i_type| i_type.deindex(self) }
     ion.indices.each { |index| index.index(self) }
+  end
+
+  def delete_ion_indices
+    # Call me before deletion
+    ion = self.class.ion
+    ion.index_types.each { |i_type| i_type.deindex(self) }
+    ion.indices.each { |index| index.del(self) }
   end
 
   module ClassMethods

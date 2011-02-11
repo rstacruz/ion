@@ -21,25 +21,32 @@ class UpdateTest < Test::Unit::TestCase
     assert Album[id].nil?
 
     search = Album.ion.search { text :title, "Shobeh" }
+
+    keys = redis.keys("Ion:*")
+    keys.each do |k|
+      next if k.include?('~')
+      p k
+      p redis.zrange(k,0,-1)
+    end
     assert_equal [], search.ids
   end
 
-# test "editing" do
-#   item   = Album.create title: "Heshela"
-#   search = Album.ion.search { text :title, "Heshela" }
-#
-#   # Search should see it
-#   assert_equal [item.id], search.ids
-#
-#   # Edit
-#   item.title = "Mathroux"
-#   item.save
-#
-#   # Now search should not see it
-#   search = Album.ion.search { text :title, "Heshela" }
-#   assert_equal [], search.ids
-#
-#   search = Album.ion.search { text :title, "mathroux" }
-#   assert_equal [item.id], search.ids
-# end
+  test "editing" do
+    item   = Album.create title: "Heshela"
+    search = Album.ion.search { text :title, "Heshela" }
+ 
+    # Search should see it
+    assert_equal [item.id], search.ids
+ 
+    # Edit
+    item.title = "Mathroux"
+    item.save
+ 
+    # Now search should not see it
+    search = Album.ion.search { text :title, "Heshela" }
+    assert_equal [], search.ids
+ 
+    search = Album.ion.search { text :title, "mathroux" }
+    assert_equal [item.id], search.ids
+  end
 end

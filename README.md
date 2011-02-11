@@ -40,7 +40,8 @@ Any ORM will do.
       }
 
       # Just call this after saving
-      after :save, :update_ion_indices
+      after  :save,   :update_ion_indices
+      before :delete, :delete_ion_indices
     end
 
 Then search like so!

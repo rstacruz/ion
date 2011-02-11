@@ -29,6 +29,10 @@ class Ion::Options
     @indices.values.map(&:values).flatten
   end
 
+  def index_types
+    indices.map(&:class).uniq
+  end
+
 protected
   # Creates the shortcuts `text :foo` => `field :text, :foo`
   Ion::Indices.names.each do |type|
