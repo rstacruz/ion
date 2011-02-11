@@ -11,6 +11,7 @@ module Ion
   autoload :Entity,   "#{PREFIX}/entity"
   autoload :Index,    "#{PREFIX}/index"
   autoload :Indices,  "#{PREFIX}/indices"
+  autoload :Helpers,  "#{PREFIX}/helpers"
 
   InvalidIndexType = Class.new(StandardError)
 

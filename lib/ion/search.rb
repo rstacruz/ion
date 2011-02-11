@@ -1,5 +1,6 @@
 class Ion::Search
   include Enumerable
+  include Ion::Helpers
 
   attr_reader :key
 
@@ -40,13 +41,13 @@ class Ion::Search
   # TODO: make tests for this first
   # def any_of(&blk)
   #   old, @gate = @gate, :any
-  #   self.instance_eval &blk
+  #   yieldie &blk
   #   @gate = old
   # end
 
   # def all_of(&blk)
   #   old, @gate = @gate, :all
-  #   self.instance_eval &blk
+  #   yieldie &blk
   #   @gate = old
   # end
 
