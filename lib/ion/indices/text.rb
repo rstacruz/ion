@@ -1,8 +1,16 @@
 module Ion
 class Indices::Text < Index
+  def index_words(str)
+    Stringer.keywords str
+  end
+
+  def search_words(str)
+    index_words str
+  end
+
   def index(record)
     super
-    words = Stringer.keywords(value_for(record))
+    words = index_words(value_for(record))
     refs  = references_key(record)
 
     words.each do |word|
@@ -12,7 +20,6 @@ class Indices::Text < Index
     end
   end
 
-  # Cleans the slate of the record
   def self.deindex(record)
     super
     refs = references_key(record)
@@ -23,7 +30,7 @@ class Indices::Text < Index
 
   def search(what)
     super
-    words   = Stringer.keywords(what)
+    words   = search_words(what)
     keys    = words.map { |word| index_key[word] }
 
     Ion.intersect keys
