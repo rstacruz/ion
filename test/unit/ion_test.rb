@@ -65,7 +65,12 @@ class IonTest < Test::Unit::TestCase
 
   test "key TTL test" do
     @album = Album.create title: "Vloop", body: "Secher Betrib"
-    search = Album.ion.search { text :title, "Vloop"; text :body, "Secher betrib" }
+
+    # This should make a bunch of temp keys
+    search = Album.ion.search {
+      text :title, "Vloop"
+      text :body, "Secher betrib"
+    }
 
     # Ensure all keys will die eventually
     keys = Ion.redis.keys('Ion:~:*')
