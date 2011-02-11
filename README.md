@@ -11,6 +11,8 @@ Testing
     rvm 1.9.2-p136@ion --rvmrc --create
     redis-server
     rvm gemset import  # or install gems in .gems
+
+    export REDIS_URL=redis://127.0.0.1:6379/0  # optional, this is the default
     rake test
 
 Usage

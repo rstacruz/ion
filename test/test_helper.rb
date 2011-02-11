@@ -7,6 +7,8 @@ require 'ffaker'
 require 'contest'
 require_relative './p_helper'
 
+Ion.connect url: (ENV['REDIS_URL'] || 'redis://127.0.0.1:6379/0')
+
 class Test::Unit::TestCase
   def setup
     re = Redis.current
