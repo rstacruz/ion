@@ -6,10 +6,7 @@ class UpdateTest < Test::Unit::TestCase
     # 10.times { Album.create title: Faker::Company.bs, body: '' }
   end
 
-  test "delete" do
-    #return #pending
-
-    # I've no idea why this actually works.
+  test "Deleting records" do
     item   = Album.create title: "Shobeh"
     search = Album.ion.search { text :title, "Shobeh" }
     id     = item.id
@@ -31,7 +28,7 @@ class UpdateTest < Test::Unit::TestCase
     assert_equal [], search.ids
   end
 
-  test "editing" do
+  test "Editing records" do
     item   = Album.create title: "Heshela"
     search = Album.ion.search { text :title, "Heshela" }
  
