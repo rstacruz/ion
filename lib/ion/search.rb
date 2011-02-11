@@ -26,11 +26,22 @@ class Ion::Search
 
 # Searching
   
-  def text(field, what, options={})
-    search :text, field, what, options
+  [:text].each do |type|
+    define_method(type) do |field, what, options={}|
+      search type, field, what, options
+    end
   end
 
-  # Searches a given field
+  # Searches a given field.
+  # @example
+  #   class Album
+  #     ion { text :name }
+  #   end
+  #
+  #   Album.ion.search {
+  #     search :text, :name, "Emotional Technology"
+  #     text :name, "Emotional Technology"   # same
+  #   }
   def search(type, field, what, options={})
     key = @options.index(type, field).search(what)
     @key.sunionstore(@results, key)

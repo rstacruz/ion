@@ -32,7 +32,7 @@ module Ion
   end
 
   def self.key
-    @key ||= Nest.new('Ion', redis)
+    @key ||= Nest.new('Ion')#, redis)
   end
 
   # Returns a new temporary key.
