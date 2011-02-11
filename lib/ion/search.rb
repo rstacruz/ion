@@ -1,9 +1,11 @@
 class Ion::Search
   include Enumerable
 
+  attr_reader :key
+
   def initialize(options)
     @options = options
-    @results = Ion.volatile_key
+    @key     = Ion.volatile_key
   end
 
   def to_a
@@ -15,7 +17,7 @@ class Ion::Search
   end
 
   def ids
-    @results.smembers
+    @key.smembers
   end
 
   def size
@@ -31,6 +33,6 @@ class Ion::Search
   # Searches a given field
   def search(type, field, what, options={})
     key = @options.index(type, field).search(what)
-    @results.sunionstore(@results, key)
+    @key.sunionstore(@results, key)
   end
 end
