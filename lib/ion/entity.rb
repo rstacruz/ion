@@ -3,16 +3,21 @@ module Ion::Entity
     to.extend ClassMethods
   end
 
+  # Call me after saving
   def update_ion_indices
-    # Call me after saving
     ion = self.class.ion
+
+    # Clear out previous indexes...
     ion.index_types.each { |i_type| i_type.deindex(self) }
+
+    # And add new ones
     ion.indices.each { |index| index.index(self) }
   end
 
+  # Call me before deletion
   def delete_ion_indices
-    # Call me before deletion
     ion = self.class.ion
+
     ion.index_types.each { |i_type| i_type.deindex(self) }
     ion.indices.each { |index| index.del(self) }
   end
