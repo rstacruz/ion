@@ -7,19 +7,24 @@ class IonTest < Test::Unit::TestCase
   end
 
   test "single result" do
-    @album = Album.create title: "Vloop", body: "Secher Betrib"
+    item   = Album.create title: "Vloop", body: "Secher Betrib"
     search = Album.ion.search { text :title, "Vloop" }
 
-    assert_equal 1, search.size
-    assert_equal @album.id, search.first.id
+    assert_equal [item.id], search.ids
+  end
+
+  test "lambda index" do
+    item   = Album.create title: "Vloop", body: "Secher Betrib"
+    search = Album.ion.search { text :also_title, "Vloop" }
+
+    assert_equal [item.id], search.ids
   end
 
   test "stripping punctuations" do
-    @album = Album.create title: "Vloop", body: "Les faux-tambros rafalo."
+    item   = Album.create title: "Minxx", body: "Les faux-tambros rafalo."
     search = Album.ion.search { text :body, "faux rafalo" }
 
-    assert_equal 1, search.size
-    assert_equal @album.id, search.first.id
+    assert_equal [item.id], search.ids
   end
 
   test "many results" do
@@ -34,37 +39,37 @@ class IonTest < Test::Unit::TestCase
   end
 
   test "multi keywords" do
-    @album = Album.create title: "Callay Krambos Chortluus secher glibbet"
+    album  = Album.create title: "Callay Krambos Chortluus secher glibbet"
     search = Album.ion.search { text :title, "krambos chortluus" }
 
-    assert_equal [@album.id], search.ids.sort
+    assert_equal [album.id], search.ids.sort
   end
 
   test "multi keywords fail" do
-    @album = Album.create title: "Krambos chortluus"
+    album  = Album.create title: "Krambos chortluus"
     search = Album.ion.search { text :title, "krambos lol" }
 
     assert_equal [], search.ids.sort
   end
 
   test "search with arity" do
-    @album = Album.create title: "Shifah loknom"
+    item   = Album.create title: "Shifah loknom"
     search = Album.ion.search { |q| q.text :title, "shifah loknom" }
 
-    assert_equal [@album.id], search.ids.sort
+    assert_equal [item.id], search.ids.sort
   end
 
   test "search within one index only" do
-    @album1 = Album.create title: "Hey there you", body: "Yes you"
-    @album2 = Album.create title: "Yes there it is", body: "Haha"
+    album1 = Album.create title: "Hey there you", body: "Yes you"
+    album2 = Album.create title: "Yes there it is", body: "Haha"
 
     search = Album.ion.search { text :title, "yes" }
 
-    assert_equal [@album2.id], search.ids.sort
+    assert_equal [album2.id], search.ids.sort
   end
 
   test "key TTL test" do
-    @album = Album.create title: "Vloop", body: "Secher Betrib"
+    Album.create title: "Vloop", body: "Secher Betrib"
 
     # This should make a bunch of temp keys
     search = Album.ion.search {

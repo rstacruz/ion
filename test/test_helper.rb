@@ -32,6 +32,7 @@ class IT::Album < Ohm::Model
   ion {
     text :title
     text :body
+    text(:also_title) { self.title }
   }
 
   after :save, :update_ion_indices

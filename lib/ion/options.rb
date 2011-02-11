@@ -32,14 +32,14 @@ class Ion::Options
 protected
   # Creates the shortcuts `text :foo` => `field :text, :foo`
   Ion::Indices.names.each do |type|
-    define_method(type) do |id, options={}|
-      field type, id, options
+    define_method(type) do |id, options={}, &blk|
+      field type, id, options, &blk
     end
   end
 
-  def field(type, id, options={})
+  def field(type, id, options={}, &blk)
     index_type = Ion::Indices.get(type)
-    @indices[type][id.to_sym] = index_type.new(id, self, options)
+    @indices[type][id.to_sym] = index_type.new(id, self, options, &blk)
   end
 end
 

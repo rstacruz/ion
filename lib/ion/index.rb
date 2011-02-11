@@ -2,9 +2,11 @@ class Ion::Index
   attr_reader :name
   attr_reader :options
 
-  def initialize(name, options, extra={})
+  def initialize(name, options, extra={}, &blk)
     @name    = name
     @options = options
+    @lambda  = blk  if block_given?
+    @lambda  ||= Proc.new { self.send(name) }
   end
 
   # Indexes a record
@@ -19,7 +21,7 @@ protected
 
   # Returns the value for a certain record
   def value_for(record)
-    record.send name
+    record.instance_eval &@lambda
   end
 
   # Returns the index key

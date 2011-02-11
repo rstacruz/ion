@@ -62,6 +62,21 @@ You can also get the raw results easily.
     search.to_a  #=> [<#Album>, <#Album>, ... ]
     search.ids   #=> ["1", "2", "10", ... ]
 
+More neat stuff
+---------------
+
+Custom:
+
+    class Product < Ohm::Model
+      reference :brand, Brand
+
+      ion {
+        text(:brand) { brand.name }
+      }
+    end
+
+    Product.ion.search { text :brand, "Starfaux" }
+
 Extending
 ---------
 
@@ -97,8 +112,6 @@ Stuff that's not implemented yet
         text :title
         sort :title
         number :stock
-
-        text(:brand) { brand.name }
       }
     end
 
