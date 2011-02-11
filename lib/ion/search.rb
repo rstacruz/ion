@@ -69,14 +69,14 @@ class Ion::Search
   #     text :name, "Emotional Technology"   # same
   #   }
   def search(type, field, what, options={})
-    key = @options.index(type, field).search(what)
-    @key.zunionstore([@key, key])  # any_of
-    key.expire Ion::DEFAULT_TTL
+    subkey = @options.index(type, field).search(what)
+    @key.zunionstore([@key, subkey])  # any_of
+    Ion.expire subkey
   end
 
 protected
   # Interal: called when the `Model.ion.search { }` block is done
   def done
-    @key.expire Ion::DEFAULT_TTL
+    Ion.expire @key
   end
 end

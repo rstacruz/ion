@@ -41,6 +41,10 @@ module Ion
     k
   end
 
+  def self.expire(key, ttl=DEFAULT_TTL)
+    key.expire(DEFAULT_TTL)  if key.include?('~')
+  end
+
   # Redis helper stuff
   # Probably best to move this somewhere
 

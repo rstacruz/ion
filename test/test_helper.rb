@@ -6,6 +6,7 @@ require 'ion'
 require 'ffaker'
 require 'contest'
 require_relative './p_helper'
+#require_relative './redis_debug'
 
 Ion.connect url: (ENV['REDIS_URL'] || 'redis://127.0.0.1:6379/0')
 

@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative '../test_helper'
 
 class IonTest < Test::Unit::TestCase
   setup do
@@ -86,14 +86,24 @@ class IonTest < Test::Unit::TestCase
   test "key TTL test" do
     Album.create title: "Vloop", body: "Secher Betrib"
 
+    old_keys = redis.keys('Ion:*').reject { |s| s['~'] }
+
     # This should make a bunch of temp keys
     search = Album.ion.search {
       text :title, "Vloop"
       text :body, "Secher betrib"
     }
 
-    # Ensure all keys will die eventually
+    # Ensure all temp keys will die eventually
     keys = redis.keys('Ion:~:*')
     keys.each { |key| assert redis.ttl(key) > 0 }
+
+    new_keys = redis.keys('Ion:*').reject { |s| s['~'] }
+
+    # Ensure that no keys died
+    assert_equal old_keys.sort, new_keys.sort
+
+    # Ensure they're all alive
+    new_keys.each { |key| assert_equal -1, redis.ttl(key) }
   end
 end
