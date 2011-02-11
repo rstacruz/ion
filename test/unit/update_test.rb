@@ -7,6 +7,8 @@ class UpdateTest < Test::Unit::TestCase
   end
 
   test "delete" do
+    #return #pending
+
     # I've no idea why this actually works.
     item   = Album.create title: "Shobeh"
     search = Album.ion.search { text :title, "Shobeh" }
