@@ -17,9 +17,7 @@ module Ion::Entity
   # Call me before deletion
   def delete_ion_indices
     ion = self.class.ion
-
-    ion.index_types.each { |i_type| i_type.deindex(self) }
-    ion.indices.each { |index| index.del(self) }
+    ion.index_types.each { |i_type| i_type.del(self) }
   end
 
   module ClassMethods

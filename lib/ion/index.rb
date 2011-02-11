@@ -21,7 +21,8 @@ class Ion::Index
   end
 
   # Completely obliterates traces of a record from the indices
-  def del(record)
+  def self.del(record)
+    self.deindex record
     references_key(record).del
   end
 
