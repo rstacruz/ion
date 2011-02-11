@@ -35,8 +35,8 @@ Any ORM will do. As long as you can hook it to update Ion's indices, you'll be f
 
       # Set it up to be indexed
       ion {
-        text :title
-        metaphone :description
+        text :name
+        metaphone :artist
       }
 
       # Just call this after saving/deleting
@@ -47,7 +47,7 @@ Any ORM will do. As long as you can hook it to update Ion's indices, you'll be f
 Searching is easy:
 
     results = Album.ion.search {
-      text :title, "Dancing Galaxy"
+      text :name, "Dancing Galaxy"
     }
 
     results = Album.ion.search {
