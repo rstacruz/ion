@@ -9,4 +9,9 @@ module Ion::Stringer
     return Array.new  unless str.is_a?(String)
     self.sanitize(str).scan(/\w+/)
   end
+
+  def self.classify(name)
+    str = name.to_s
+    str.scan(/\b(\w)(\w*)/).map { |(w, ord)| w.upcase + ord.downcase }.join('')
+  end
 end

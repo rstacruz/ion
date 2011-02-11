@@ -1,8 +1,4 @@
-def F(*a)  File.join a.join('/').split('/'); end
-def Fx(*a) File.expand_path F(*a); end
-def Fr(*a) File.expand_path F(File.dirname(__FILE__), *a); end
-
-$:.unshift Fr('../lib')
+$:.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 
 require 'ohm'
 require 'ohm/contrib'
@@ -20,4 +16,7 @@ class Test::Unit::TestCase
   def sorted_ids(search)
     search.to_a.map(&:id).sort
   end
+end
+
+module IT
 end

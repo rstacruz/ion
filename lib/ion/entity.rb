@@ -6,7 +6,7 @@ module Ion::Entity
   def update_ion_indices
     # Call me after saving
     ion = self.class.ion
-    ion.indices.each { |_, index| index.index(self) }
+    ion.indices.each { |index| index.index(self) }
   end
 
   module ClassMethods

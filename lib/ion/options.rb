@@ -1,10 +1,9 @@
 class Ion::Options
   attr_reader :model
-  attr_reader :indices
 
   def initialize(model)
     @model = model
-    @indices = Hash.new
+    @indices = Hash.new { |h, k| h[k] = Hash.new }
   end
 
   def search(&blk)
@@ -19,8 +18,21 @@ class Ion::Options
     search
   end
 
+
   def key
     @key ||= Ion.key[model.name]  #=> 'Ion:Person'
+  end
+
+  # Returns a certain index.
+  # @example
+  #   @options.index(:text, :title)
+  def index(type, name)
+    @indices[type][name]
+  end
+
+  # Returns all indices.
+  def indices
+    @indices.values.map(&:values).flatten
   end
 
 protected
@@ -29,7 +41,8 @@ protected
   end
 
   def field(type, id, options={})
-    @indices[id.to_sym] = Ion::Indices::Text.new(id, self, options)
+    index_type = Ion::Indices.get(type)
+    @indices[type][id.to_sym] = index_type.new(id, self, options)
   end
 end
 

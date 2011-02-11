@@ -12,7 +12,15 @@ module Ion
 
   module Indices
     autoload :Text,   "#{PREFIX}/indices/text"
+
+    def self.get(name)
+      name = Stringer.classify(name).to_sym
+      raise InvalidIndexType  unless const_defined?(name)
+      const_get(name)
+    end
   end
+
+  InvalidIndexType = Class.new(StandardError)
 
   def self.key
     @key ||= Nest.new('Ion')
