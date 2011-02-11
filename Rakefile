@@ -5,3 +5,5 @@ task :test do
     load file  unless file =~ /^-/
   end
 end
+
+task :default => :test
