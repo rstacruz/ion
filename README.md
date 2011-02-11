@@ -92,17 +92,20 @@ Stuff that's not implemented yet
 
 ...but will be.
 
-    class Album < Model
+    class Item < Model
       ion {
         text :title
         sort :title
+        number :stock
       }
     end
 
-    search = Album.ion.search {
+    search = Item.ion.search {
       any_of {
         text :title, "Mac book"
         text :title, "Macbook"
+        number :stock, 3
+        number :stock, gt: 3
       }
       exclude {
         text :title, "Pro"
@@ -110,10 +113,9 @@ Stuff that's not implemented yet
     }
 
     search.sort_by :title
-    search.from 1
-    search.limit 30
 
+    search.range from: 54, limit: 10
     search.paginate page: 1, limit: 30
     search.pages
 
-    search.facets #=> { :name => { "Ape" => 2, "Banana" => 3 } } ??
+    search.facet_counts #=> { :name => { "Ape" => 2, "Banana" => 3 } } ??
