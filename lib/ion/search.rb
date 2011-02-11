@@ -21,7 +21,7 @@ class Ion::Search
   end
 
   def to_a
-    ids.map &(@options.model)
+    ids.map &model
   end
 
   def each(&blk)
@@ -51,6 +51,7 @@ class Ion::Search
   #   @gate = old
   # end
 
+  # Defines the shortcuts `text :foo 'xyz'` => `search :text, :foo, 'xyz'`
   Ion::Indices.names.each do |type|
     define_method(type) do |field, what, options={}|
       search type, field, what, options
