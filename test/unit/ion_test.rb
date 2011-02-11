@@ -1,22 +1,5 @@
 require 'test_helper'
 
-class IT::Album < Ohm::Model
-  include Ion::Entity
-  include Ohm::Callbacks
-
-  attribute :title
-  attribute :body
-
-  ion {
-    text :title
-    text :body
-  }
-
-  after :save, :update_ion_indices
-end
-
-Album = IT::Album
-
 class IonTest < Test::Unit::TestCase
   setup do
     # Fake entries that should NOT be returned
@@ -78,5 +61,14 @@ class IonTest < Test::Unit::TestCase
     search = Album.ion.search { text :title, "yes" }
 
     assert_equal [@album2.id], search.ids.sort
+  end
+
+  test "key TTL test" do
+    @album = Album.create title: "Vloop", body: "Secher Betrib"
+    search = Album.ion.search { text :title, "Vloop"; text :body, "Secher betrib" }
+
+    # Ensure all keys will die eventually
+    keys = Ion.redis.keys('Ion:~:*')
+    keys.each { |key| assert Ion.redis.ttl(key) > 0 }
   end
 end

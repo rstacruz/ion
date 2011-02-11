@@ -26,3 +26,21 @@ end
 
 module IT
 end
+
+class IT::Album < Ohm::Model
+  include Ion::Entity
+  include Ohm::Callbacks
+
+  attribute :title
+  attribute :body
+
+  ion {
+    text :title
+    text :body
+  }
+
+  after :save, :update_ion_indices
+end
+
+Album = IT::Album
+

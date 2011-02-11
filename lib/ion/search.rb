@@ -71,5 +71,12 @@ class Ion::Search
   def search(type, field, what, options={})
     key = @options.index(type, field).search(what)
     @key.sunionstore(@results, key)  # any_of
+    key.expire Ion::DEFAULT_TTL
+  end
+
+protected
+  # Interal: called when the `Model.ion.search { }` block is done
+  def done
+    @key.expire Ion::DEFAULT_TTL
   end
 end

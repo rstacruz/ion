@@ -5,6 +5,9 @@ require 'text'
 module Ion
   PREFIX = File.join(File.dirname(__FILE__), 'ion')
 
+  # How long until search keys expire.
+  DEFAULT_TTL = 30
+
   autoload :Stringer, "#{PREFIX}/stringer"
   autoload :Options,  "#{PREFIX}/options"
   autoload :Search,   "#{PREFIX}/search"
@@ -33,9 +36,8 @@ module Ion
   end
 
   # Returns a new temporary key.
-  def self.volatile_key(ttl=30)
+  def self.volatile_key
     k = key['~'][rand.to_s]
-    k.expire ttl  if ttl > 0
     k
   end
 

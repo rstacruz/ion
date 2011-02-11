@@ -9,9 +9,9 @@ class Ion::Options
   def search(&blk)
     search = Ion::Search.new(self)
     search.yieldie &blk
+    search.send :done
     search
   end
-
 
   def key
     @key ||= Ion.key[model.name]  #=> 'Ion:Person'
