@@ -26,7 +26,7 @@ class MetaphoneTest < Test::Unit::TestCase
   test "metaphone" do
     items = [
       Song.create(body: "Stephanie"),
-      Song.create(body: "Ztephanno")
+      Song.create(body: "Ztephanno..!")
     ]
     search = Song.ion.search { metaphone :body, "Stefan" }
 

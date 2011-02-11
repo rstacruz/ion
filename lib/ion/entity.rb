@@ -10,6 +10,24 @@ module Ion::Entity
   end
 
   module ClassMethods
+    # Sets up Ion indexing for a model.
+    #
+    # When no block is given, it returns the Ion::Options
+    # for the model.
+    #
+    # @example
+    #
+    #   class Artist < Model
+    #     include Ion::Entity
+    #     ion {
+    #       text :name
+    #       text :real_name
+    #     }
+    #   end
+    #
+    #   Artist.ion.indices
+    #   Artist.ion.search { ... }
+    #
     def ion(&blk)
       @ion_options ||= Ion::Options.new(self)
       @ion_options.instance_eval(&blk)  if block_given?

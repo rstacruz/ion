@@ -97,6 +97,8 @@ Stuff that's not implemented yet
         text :title
         sort :title
         number :stock
+
+        text(:brand) { brand.name }
       }
     end
 
