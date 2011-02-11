@@ -1,23 +1,25 @@
 class Ion::Search
+  include Enumerable
+
   def initialize(options)
     @options = options
     @results = Ion.volatile_key
   end
 
-  def results
-    @results.smembers.uniq.map(&(@options.model))
+  def to_a
+    ids.map(&(@options.model))
   end
 
-  def to_a
-    results
+  def each(&blk)
+    to_a.each(&blk)
+  end
+
+  def ids
+    @results.smembers
   end
 
   def size
-    results.size
-  end
-
-  def keywords
-    @keywords ||= ''
+    ids.size
   end
 
 # Searching
@@ -28,9 +30,7 @@ class Ion::Search
 
   # Searches a given field
   def search(type, field, what, options={})
-    @keywords = what
-
-    key = @options.index(type, field).search(self)
+    key = @options.index(type, field).search(what)
     @results.sunionstore(@results, key)
   end
 end

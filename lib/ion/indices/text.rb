@@ -6,8 +6,8 @@ class Ion::Indices::Text < Ion::Index
     words.each { |word| keywords_key[word].sadd record.id }
   end
 
-  def search(search)
-    words   = Ion::Stringer.keywords(search.keywords)
+  def search(what)
+    words   = Ion::Stringer.keywords(what)
     keys    = words.map { |word| keywords_key[word] }
 
     Ion.intersect keys

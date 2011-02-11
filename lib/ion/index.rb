@@ -11,6 +11,6 @@ class Ion::Index
   end
 
   # Returns a key (set) of results
-  def search(search)
+  def search(what)
   end
 end

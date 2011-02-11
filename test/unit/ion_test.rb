@@ -27,16 +27,16 @@ class IonTest < Test::Unit::TestCase
     @album = Album.create title: "Vloop", body: "Secher Betrib"
     search = Album.ion.search { text :title, "Vloop" }
 
-    assert_equal 1, search.results.size
-    assert_equal @album.id, search.results.first.id
+    assert_equal 1, search.size
+    assert_equal @album.id, search.first.id
   end
 
   test "stripping punctuations" do
     @album = Album.create title: "Vloop", body: "Les faux-tambros rafalo."
     search = Album.ion.search { text :body, "faux rafalo" }
 
-    assert_equal 1, search.results.size
-    assert_equal @album.id, search.results.first.id
+    assert_equal 1, search.size
+    assert_equal @album.id, search.first.id
   end
 
   test "many results" do
@@ -46,29 +46,29 @@ class IonTest < Test::Unit::TestCase
 
     search = Album.ion.search { text :title, "Yo" }
 
-    assert_equal albums.size, search.results.size
-    assert_equal albums.map(&:id).sort, sorted_ids(search)
+    assert_equal albums.size, search.size
+    assert_equal albums.map(&:id).sort, search.ids.sort
   end
 
   test "multi keywords" do
     @album = Album.create title: "Callay Krambos Chortluus secher glibbet"
     search = Album.ion.search { text :title, "krambos chortluus" }
 
-    assert_equal [@album.id], sorted_ids(search)
+    assert_equal [@album.id], search.ids.sort
   end
 
   test "multi keywords fail" do
     @album = Album.create title: "Krambos chortluus"
     search = Album.ion.search { text :title, "krambos lol" }
 
-    assert_equal [], sorted_ids(search)
+    assert_equal [], search.ids.sort
   end
 
   test "search with arity" do
     @album = Album.create title: "Shifah loknom"
     search = Album.ion.search { |q| q.text :title, "shifah loknom" }
 
-    assert_equal [@album.id], sorted_ids(search)
+    assert_equal [@album.id], search.ids.sort
   end
 
   test "with" do
