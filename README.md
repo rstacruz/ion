@@ -21,7 +21,7 @@ Usage
 Ion needs Redis.
 
     require 'ion'
-    Ion.connect 'redis://127.0.0.1:22222'
+    Ion.connect url: 'redis://127.0.0.1:6379/0'
 
 Any ORM will do.
 
