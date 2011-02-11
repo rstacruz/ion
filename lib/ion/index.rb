@@ -7,6 +7,7 @@ class Ion::Index
     @options = options
   end
 
+  # Indexes a record
   def index(record)
   end
 
@@ -15,6 +16,11 @@ class Ion::Index
   end
 
 protected
+
+  # Returns the value for a certain record
+  def value_for(record)
+    record.send name
+  end
 
   # Returns the index key
   # Example: Ion:Album:text:title

@@ -1,15 +1,15 @@
-class Ion::Indices::Text < Ion::Index
+module Ion
+class Indices::Text < Index
   def index(record)
-    value = record.send(self.name)
-    words = Ion::Stringer.keywords(value)
-
+    words = Stringer.keywords(value_for(record))
     words.each { |word| index_key[word].sadd record.id }
   end
 
   def search(what)
-    words   = Ion::Stringer.keywords(what)
+    words   = Stringer.keywords(what)
     keys    = words.map { |word| index_key[word] }
 
     Ion.intersect keys
   end
+end
 end
