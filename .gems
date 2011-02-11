@@ -5,3 +5,4 @@ nest -v1.1.0
 ohm -v0.1.3
 ohm-contrib -v0.1.1
 redis -v2.1.1
+text -v0.2.0

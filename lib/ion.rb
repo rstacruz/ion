@@ -1,5 +1,6 @@
 require 'redis'
 require 'nest'
+require 'text'
 
 module Ion
   PREFIX = File.join(File.dirname(__FILE__), 'ion')
@@ -11,10 +12,11 @@ module Ion
   autoload :Index,    "#{PREFIX}/index"
 
   module Indices
-    autoload :Text,   "#{PREFIX}/indices/text"
+    autoload :Text,      "#{PREFIX}/indices/text"
+    autoload :Metaphone, "#{PREFIX}/indices/metaphone"
 
     def self.names
-      [ :text ]
+      [ :text, :metaphone ]
     end
 
     def self.get(name)
@@ -27,7 +29,7 @@ module Ion
   InvalidIndexType = Class.new(StandardError)
 
   def self.redis
-    @redis
+    @redis || key.redis
   end
 
   # Connects to a certain Redis server.
@@ -36,8 +38,8 @@ module Ion
   end
 
   def self.key
-    @key ||= if redis
-      Nest.new('Ion', redis)
+    @key ||= if @redis
+      Nest.new('Ion', @redis)
     else
       Nest.new('Ion')
     end
