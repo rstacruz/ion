@@ -71,11 +71,12 @@ class IonTest < Test::Unit::TestCase
     assert_equal [@album.id], search.ids.sort
   end
 
-  test "with" do
-    return #pending
+  test "search within one index only" do
     @album1 = Album.create title: "Hey there you", body: "Yes you"
     @album2 = Album.create title: "Yes there it is", body: "Haha"
 
     search = Album.ion.search { text :title, "yes" }
+
+    assert_equal [@album2.id], search.ids.sort
   end
 end

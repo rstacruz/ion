@@ -22,8 +22,17 @@ module Ion
 
   InvalidIndexType = Class.new(StandardError)
 
+  def self.redis
+    @redis
+  end
+
+  # Connects to a certain Redis server.
+  def self.connect(to)
+    @redis = Redis.connect(to)
+  end
+
   def self.key
-    @key ||= Nest.new('Ion')
+    @key ||= Nest.new('Ion', redis)
   end
 
   # Returns a new temporary key.
