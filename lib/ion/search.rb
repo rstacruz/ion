@@ -70,7 +70,7 @@ class Ion::Search
   #   }
   def search(type, field, what, options={})
     key = @options.index(type, field).search(what)
-    @key.zunionstore([@results, key])  # any_of
+    @key.zunionstore([@key, key])  # any_of
     key.expire Ion::DEFAULT_TTL
   end
 

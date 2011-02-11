@@ -68,6 +68,21 @@ class IonTest < Test::Unit::TestCase
     assert_equal [album2.id], search.ids.sort
   end
 
+  test "scores" do
+    album1 = Album.create title: "Yes there it is", body: "Haha"
+    album2 = Album.create title: "Yes yeah", body: "Yes you"
+
+    search = Album.ion.search { text :title, "yes"; text :body, "yes" }
+
+    # Album2 will go first because it matches both
+    assert_equal [album2.id, album1.id], search.ids
+
+    # Check if the scores are right
+    scores = Hash[*search.key.zrevrange(0, -1, with_scores: true)]
+    assert_equal "2", scores[album2.id]
+    assert_equal "1", scores[album1.id]
+  end
+
   test "key TTL test" do
     Album.create title: "Vloop", body: "Secher Betrib"
 
