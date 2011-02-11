@@ -2,7 +2,7 @@ module Ion
 class Indices::Text < Index
   def index(record)
     words = Stringer.keywords(value_for(record))
-    words.each { |word| index_key[word].sadd record.id }
+    words.each { |word| index_key[word].zadd 1, record.id }
   end
 
   def search(what)

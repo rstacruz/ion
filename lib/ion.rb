@@ -49,7 +49,7 @@ module Ion
     return keys.first  if keys.size == 1
 
     results = Ion.volatile_key
-    keys.each { |key| results.sunionstore results, key }
+    keys.each { |key| results.zunionstore [results, key] }
     results
   end
 
@@ -58,8 +58,8 @@ module Ion
     return keys.first  if keys.size == 1
 
     results = Ion.volatile_key
-    results.sunionstore keys.first
-    keys[1..-1].each { |key| results.sinterstore results, key }
+    results.zunionstore [keys.first]
+    keys[1..-1].each { |key| results.zinterstore [results, key] }
     results
   end
 end

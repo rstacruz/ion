@@ -4,7 +4,7 @@ class Indices::Metaphone < Index
     value = value_for(record)
     words = ::Text::Metaphone.metaphone(value).strip.split(' ')
 
-    words.each { |word| index_key[word].sadd record.id }
+    words.each { |word| index_key[word].zadd 1, record.id }
   end
 
   def search(what)

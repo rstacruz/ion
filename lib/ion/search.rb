@@ -29,7 +29,7 @@ class Ion::Search
   end
 
   def ids
-    @key.smembers
+    @key.zrevrange 0, -1
   end
 
   def size
@@ -70,7 +70,7 @@ class Ion::Search
   #   }
   def search(type, field, what, options={})
     key = @options.index(type, field).search(what)
-    @key.sunionstore(@results, key)  # any_of
+    @key.zunionstore([@results, key])  # any_of
     key.expire Ion::DEFAULT_TTL
   end
 
