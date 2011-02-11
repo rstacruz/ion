@@ -112,20 +112,27 @@ Stuff that's not implemented yet
     class Item < Model
       ion {
         text :title
-        sort :title
-        number :stock
+        sort :title                    # TODO: Sorting
+        number :stock                  # TODO: Indexing numbers
       }
     end
 
     search = Item.ion.search {
-      any_of {
+      any_of {                         # TODO: any_of and all_of
         text :title, "Mac book"
         text :title, "Macbook"
         number :stock, 3
         number :stock, gt: 3
       }
-      exclude {
-        text :title, "Pro"
+      score(2.0) {                     # TODO: important searches (+relevance)
+        text :title, "Pro"             # This will be more important (by 2x) than others
+      }
+      boost(2.0) {                     # TODO: boost relevance
+        text :brand, "Apple"           # Will boost if brand == "Apple", but will
+                                       # not return all Apple results
+      }
+      exclude {                        # TODO: exclusions
+        text :title, "Case"
       }
     }
 
