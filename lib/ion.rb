@@ -13,6 +13,10 @@ module Ion
   module Indices
     autoload :Text,   "#{PREFIX}/indices/text"
 
+    def self.names
+      [ :text ]
+    end
+
     def self.get(name)
       name = Stringer.classify(name).to_sym
       raise InvalidIndexType  unless const_defined?(name)

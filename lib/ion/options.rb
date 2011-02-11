@@ -36,8 +36,10 @@ class Ion::Options
   end
 
 protected
-  def text(id, options={})
-    field :text, id, options
+  Ion::Indices.names.each do |type|
+    define_method(type) do |id, options={}|
+      field type, id, options
+    end
   end
 
   def field(type, id, options={})

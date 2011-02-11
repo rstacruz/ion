@@ -49,8 +49,8 @@ class Ion::Search
   #   self.instance_eval &blk
   #   @gate = old
   # end
-  
-  [:text].each do |type|
+
+  Ion::Indices.names.each do |type|
     define_method(type) do |field, what, options={}|
       search type, field, what, options
     end
