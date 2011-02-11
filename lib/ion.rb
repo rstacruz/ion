@@ -10,21 +10,7 @@ module Ion
   autoload :Search,   "#{PREFIX}/search"
   autoload :Entity,   "#{PREFIX}/entity"
   autoload :Index,    "#{PREFIX}/index"
-
-  module Indices
-    autoload :Text,      "#{PREFIX}/indices/text"
-    autoload :Metaphone, "#{PREFIX}/indices/metaphone"
-
-    def self.names
-      [ :text, :metaphone ]
-    end
-
-    def self.get(name)
-      name = Stringer.classify(name).to_sym
-      raise InvalidIndexType  unless const_defined?(name)
-      const_get(name)
-    end
-  end
+  autoload :Indices,  "#{PREFIX}/indices"
 
   InvalidIndexType = Class.new(StandardError)
 
@@ -74,10 +60,3 @@ module Ion
     results
   end
 end
-
-# Ion:MODEL:keywords:FIELD:word
-#
-# Refactor todo:
-# - Ion::Options should spawn Indices
-# - Ion::Search#results should defer to Indices
-# - Ion::Entity#update_ion_indices should defer to Indices

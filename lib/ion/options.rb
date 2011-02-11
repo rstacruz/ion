@@ -25,7 +25,7 @@ class Ion::Options
 
   # Returns a certain index.
   # @example
-  #   @options.index(:text, :title)
+  #   @options.index(:text, :title) #=> <#Ion::Indices::Text>
   def index(type, name)
     @indices[type][name]
   end
@@ -36,6 +36,7 @@ class Ion::Options
   end
 
 protected
+  # Creates the shortcuts `text :foo` => `field :text, :foo`
   Ion::Indices.names.each do |type|
     define_method(type) do |id, options={}|
       field type, id, options
