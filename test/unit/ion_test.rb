@@ -73,7 +73,7 @@ class IonTest < Test::Unit::TestCase
     }
 
     # Ensure all keys will die eventually
-    keys = Ion.redis.keys('Ion:~:*')
-    keys.each { |key| assert Ion.redis.ttl(key) > 0 }
+    keys = redis.keys('Ion:~:*')
+    keys.each { |key| assert redis.ttl(key) > 0 }
   end
 end

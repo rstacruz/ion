@@ -5,8 +5,7 @@ require 'ohm/contrib'
 require 'ion'
 require 'ffaker'
 require 'contest'
-
-require 'json'
+require_relative './p_helper'
 
 class Test::Unit::TestCase
   def setup
@@ -15,12 +14,8 @@ class Test::Unit::TestCase
     re.del(*keys)  if keys.any?
   end
 
-  def p(*a)
-    if a.size == 1
-      return jj(a)
-    end
-
-    puts a.map(&:to_json)
+  def redis
+    Ion.redis
   end
 end
 
