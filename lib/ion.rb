@@ -45,8 +45,8 @@ module Ion
   end
 
   # Makes a certain volatile key expire.
-  def self.expire(key, ttl=DEFAULT_TTL)
-    key.expire(DEFAULT_TTL)  if key.include?('~')
+  def self.expire(*keys)
+    keys.each { |k| redis.expire(k, DEFAULT_TTL)  if k.include?('~') }
   end
 
   # Redis helper stuff

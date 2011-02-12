@@ -7,7 +7,7 @@ module Kernel
     begin
       raise Error
     rescue => e
-      file, line, _ = e.backtrace[2].split(':')
+      file, line, _ = e.backtrace[1].split(':')
       source = "%s:%s" % [ File.basename(file), line ]
     end
 

@@ -38,6 +38,7 @@ class Indices::Text < Index
       # Multiply
     end
 
+    Ion.expire keys
     Ion.intersect keys
   end
 end

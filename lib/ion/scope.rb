@@ -2,12 +2,15 @@ class Ion::Scope
   include Ion::Helpers
 
   attr_reader :parent
+  attr_reader :scopes
   attr_writer :key
 
   def initialize(search, args={}, &blk)
     @search  = search
     @parent  = args[:parent]
     @subkeys = Array.new
+    @scopes  = Array.new
+    @searchkeys = Array.new
     @gate    = args[:gate] || :all
     @score   = args[:score] || 1.0
 
@@ -16,19 +19,23 @@ class Ion::Scope
   end
 
   def any_of(&blk)
-    subscope :gate => :any, &blk
+    @scopes << subscope(:gate => :any, &blk)
   end
 
   def all_of(&blk)
-    subscope :gate => :all, &blk
+    @scopes << subscope(:gate => :all, &blk)
   end
 
   def score(score, &blk)
-    subscope :score => (score * @score), &blk
+    @scopes << subscope(:score => (score * @score), &blk)
   end
 
   def key
     @key ||= Ion.volatile_key
+  end
+
+  def count
+    ids.count
   end
 
   # Defines the shortcuts `text :foo 'xyz'` => `search :text, :foo, 'xyz'`
@@ -50,8 +57,8 @@ class Ion::Scope
   #   }
   def search(type, field, what, args={})
     subkey = options.index(type, field).search(what, args)
-    Ion.expire subkey # OPT: This should not be called!
-    @subkeys << subkey
+    @searchkeys << subkey
+    @subkeys    << subkey
   end
 
   def options
@@ -71,12 +78,12 @@ protected
     elsif @subkeys.size > 1
       combine @subkeys
     end
-    #Ion.expire key # OPT: make sure this is only done once
   end
 
   # Sets the TTL for the temp keys.
   def expire
-    [*[key, @subkeys]].each { |k| Ion.expire k }
+    @scopes.each { |s| s.send :expire }
+    Ion.expire key, *@searchkeys
   end
 
   def combine(subkeys)
@@ -95,7 +102,9 @@ protected
       :score => @score
     }
     scope = Ion::Scope.new(@search, opts.merge(args), &blk)
+    key   = scope.key
     @subkeys << scope.key
+    scope
   end
 
   # Runs a given DSL block.

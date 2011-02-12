@@ -27,7 +27,7 @@ class Ion::Search
   end
 
   def size
-    ids.size
+    @scope.count
   end
 
   def yieldie(&blk)
