@@ -90,9 +90,13 @@ it must match all the given rules). You can use `any_of` and `all_of`, and
 you may even nest them.
 
     Book.ion.search {
-      any_of {
+      all_of {
         text :name,     "perfume the story of a murderer"
-        text :synopsis, "perfume the story of a murderer"
+        text :synopsis, "base note"
+        any_of {
+          text :tags, "fiction"
+          text :tags, "thriller"
+        }
       }
     }
 
