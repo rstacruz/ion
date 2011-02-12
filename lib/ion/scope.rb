@@ -1,35 +1,33 @@
 class Ion::Scope
   include Ion::Helpers
 
-  attr_reader :parent
-  attr_reader :scopes
-  attr_reader :search_hash
   attr_writer :key
 
   def initialize(search, args={}, &blk)
     @search  = search
-    @parent  = args[:parent]
-    @subkeys = Array.new
-    @scopes  = Array.new
-    @searchkeys = Array.new
-    @gate    = args[:gate] || :all
+    @gate    = args[:gate]  || :all
     @score   = args[:score] || 1.0
-    @search_hash = [[@gate, @score]]
 
-    run(&blk)  if block_given?
+    yieldie(&blk) and done  if block_given?
+
     raise Ion::Error  unless [:all, :any].include?(@gate)
   end
 
+  # Returns a unique hash of what the scope contains.
+  def search_hash
+    @search_hash ||= [[@gate, @score]]
+  end
+
   def any_of(&blk)
-    @scopes << subscope(:gate => :any, &blk)
+    scopes << subscope(:gate => :any, &blk)
   end
 
   def all_of(&blk)
-    @scopes << subscope(:gate => :all, &blk)
+    scopes << subscope(:gate => :all, &blk)
   end
 
   def score(score, &blk)
-    @scopes << subscope(:score => (score * @score), &blk)
+    scopes << subscope(:score => (score * @score), &blk)
   end
 
   def key
@@ -59,9 +57,9 @@ class Ion::Scope
   #   }
   def search(type, field, what, args={})
     subkey = options.index(type, field).search(what, args)
-    @searchkeys  << subkey
-    @subkeys     << subkey
-    @search_hash << [type,field,what,args]
+    searchkeys  << subkey
+    subkeys     << subkey
+    search_hash << [type,field,what,args]
   end
 
   def options
@@ -70,25 +68,28 @@ class Ion::Scope
 
   def ids
     results = key.zrevrange(0, -1)
-    expire
-    results
+    expire and results
   end
 
 protected
+  def scopes()     @scopes ||= Array.new end
+  def subkeys()    @subkeys ||= Array.new end
+  def searchkeys() @searchkeys ||= Array.new end
+
   # Called by #run after doing an instance_eval of DSL stuff.
   # This consolidates the keys into self.key.
   def done
-    if @subkeys.size == 1
-      self.key = @subkeys.first
-    elsif @subkeys.size > 1
-      combine @subkeys
+    if subkeys.size == 1
+      self.key = subkeys.first
+    elsif subkeys.size > 1
+      combine subkeys
     end
   end
 
   # Sets the TTL for the temp keys.
   def expire
-    @scopes.each { |s| s.send :expire }
-    Ion.expire key, *@searchkeys
+    scopes.each { |s| s.send :expire }
+    Ion.expire key, *searchkeys
   end
 
   def combine(subkeys)
@@ -101,19 +102,11 @@ protected
 
   # Used by all_of and any_of
   def subscope(args={}, &blk)
-    opts = {
-      :parent => self,
-      :gate   => @gate,
-      :score  => @score
-    }
+    opts  = { :gate => @gate, :score => @score }
     scope = Ion::Scope.new(@search, opts.merge(args), &blk)
-    @subkeys     << scope.key
-    @search_hash << scope.search_hash
-    scope
-  end
 
-  # Runs a given DSL block.
-  def run(&blk)
-    yieldie(&blk) and done
+    subkeys     << scope.key
+    search_hash << scope.search_hash
+    scope
   end
 end
