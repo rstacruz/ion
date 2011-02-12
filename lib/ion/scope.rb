@@ -12,7 +12,7 @@ class Ion::Scope
     @score   = args[:score] || 1.0
 
     run(&blk)  if block_given?
-    raise Error  unless [:all, :any].include?(@gate)
+    raise Ion::Error  unless [:all, :any].include?(@gate)
   end
 
   def any_of(&blk)

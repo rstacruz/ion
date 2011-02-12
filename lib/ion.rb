@@ -18,6 +18,7 @@ module Ion
   autoload :Helpers,  "#{PREFIX}/helpers"
 
   InvalidIndexType = Class.new(StandardError)
+  Error            = Class.new(StandardError)
 
   def self.redis
     @redis || key.redis
