@@ -29,10 +29,14 @@ class Indices::Text < Index
     end
   end
 
-  def search(what)
+  def search(what, args={})
     super
     words   = search_words(what)
     keys    = words.map { |word| index_key[word] }
+
+    if args[:score] != 1.0 && !args[:score].nil?
+      # Multiply
+    end
 
     Ion.intersect keys
   end

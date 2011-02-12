@@ -9,6 +9,7 @@ class Ion::Scope
     @parent  = args[:parent]
     @subkeys = Array.new
     @gate    = args[:gate] || :all
+    @score   = args[:score] || 1.0
 
     run(&blk)  if block_given?
     raise Error  unless [:all, :any].include?(@gate)
@@ -22,6 +23,10 @@ class Ion::Scope
     subscope :gate => :all, &blk
   end
 
+  def score(score, &blk)
+    subscope :score => (score * @score), &blk
+  end
+
   def key
     @key ||= Ion.volatile_key
   end
@@ -29,7 +34,7 @@ class Ion::Scope
   # Defines the shortcuts `text :foo 'xyz'` => `search :text, :foo, 'xyz'`
   Ion::Indices.names.each do |type|
     define_method(type) do |field, what, args={}|
-      search type, field, what, args
+      search type, field, what, { :score => @score }.merge(args)
     end
   end
 
@@ -44,8 +49,8 @@ class Ion::Scope
   #     text :name, "Emotional Technology"   # same
   #   }
   def search(type, field, what, args={})
-    subkey = options.index(type, field).search(what)
-    Ion.expire subkey
+    subkey = options.index(type, field).search(what, args)
+    Ion.expire subkey # OPT: This should not be called!
     @subkeys << subkey
   end
 
@@ -84,7 +89,12 @@ protected
 
   # Used by all_of and any_of
   def subscope(args={}, &blk)
-    scope = Ion::Scope.new(@search, { :parent => self }.merge(args), &blk)
+    opts = {
+      :parent => self,
+      :gate => @gate,
+      :score => @score
+    }
+    scope = Ion::Scope.new(@search, opts.merge(args), &blk)
     @subkeys << scope.key
   end
 

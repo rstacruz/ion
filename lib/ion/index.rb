@@ -6,7 +6,7 @@ class Ion::Index
   attr_reader :name
   attr_reader :options
 
-  def initialize(name, options, extra={}, &blk)
+  def initialize(name, options, args={}, &blk)
     @name    = name
     @options = options
     @lambda  = blk  if block_given?
@@ -27,7 +27,7 @@ class Ion::Index
   end
 
   # Returns a key (set) of results
-  def search(what)
+  def search(what, args={})
   end
 
 protected
