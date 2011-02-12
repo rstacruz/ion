@@ -20,6 +20,7 @@ module Ion
   InvalidIndexType = Class.new(StandardError)
   Error            = Class.new(StandardError)
 
+  # Returns the Redis instance that is being used by Ion.
   def self.redis
     @redis || key.redis
   end
@@ -29,6 +30,7 @@ module Ion
     @redis = Redis.connect(to)
   end
 
+  # Returns the root key.
   def self.key
     @key ||= if @redis
       Nest.new('Ion', @redis)
@@ -39,10 +41,10 @@ module Ion
 
   # Returns a new temporary key.
   def self.volatile_key
-    k = key['~'][rand.to_s]
-    k
+    key['~'][rand.to_s]
   end
 
+  # Makes a certain volatile key expire.
   def self.expire(key, ttl=DEFAULT_TTL)
     key.expire(DEFAULT_TTL)  if key.include?('~')
   end
