@@ -10,7 +10,7 @@ class Indices::Text < Index
 
   def index(record)
     super
-    words = index_words(value_for(record))
+    words = index_words(value_for(record).to_s)
     refs  = references_key(record)
 
     words.each do |word|
