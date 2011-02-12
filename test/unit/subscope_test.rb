@@ -5,21 +5,12 @@ class SubscopeTest < Test::Unit::TestCase
     # Fake entries that should NOT be returned
     10.times { Album.create title: Faker::Company.bs, body: '' }
 
-    @albums = {
+    @items = {
       :a => Album.create(title: "Secher glite"),
       :b => Album.create(title: "Shebboleth mordor"),
       :c => Album.create(title: "Rexan ruffush"),
       :d => Album.create(title: "Parctris leroux")
     }
-
-  end
-
-  def album_ids(keys)
-    keys.map { |k| @albums[k.to_sym].id }
-  end
-
-  def assert_ids(keys, args={})
-    assert_equal album_ids(keys).sort, args[:for].ids.sort
   end
 
   test "nested 1" do

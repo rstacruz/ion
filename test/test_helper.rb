@@ -20,6 +20,18 @@ class Test::Unit::TestCase
   def redis
     Ion.redis
   end
+
+  def ids(keys)
+    keys.map { |k| @items[k.to_sym].id }
+  end
+
+  def assert_ids(keys, args={})
+    if args[:ordered]
+      assert_equal ids(keys), args[:for].ids
+    else
+      assert_equal ids(keys).sort, args[:for].ids.sort
+    end
+  end
 end
 
 module IT

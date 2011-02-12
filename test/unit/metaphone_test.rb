@@ -21,16 +21,17 @@ class MetaphoneTest < Test::Unit::TestCase
   setup do
     # Fake entries that should NOT be returned
     10.times { Song.create title: Faker::Company.bs, body: '' }
+
+    @items = {
+      a: Song.create(body: "Stephanie"),
+      b: Song.create(body: "Ztephanno..!")
+    }
   end
 
   test "metaphone" do
-    items = [
-      Song.create(body: "Stephanie"),
-      Song.create(body: "Ztephanno..!")
-    ]
     search = Song.ion.search { metaphone :body, "Stefan" }
 
-    assert_equal items.map(&:id).sort, search.ids.sort
+    assert_ids %w(a b), for: search
   end
 
 end

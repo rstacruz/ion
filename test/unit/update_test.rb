@@ -18,13 +18,6 @@ class UpdateTest < Test::Unit::TestCase
     assert Album[id].nil?
 
     search = Album.ion.search { text :title, "Shobeh" }
-
-    keys = redis.keys("Ion:*")
-    keys.each do |k|
-      next if k.include?('~')
-      p k
-      p redis.zrange(k,0,-1)
-    end
     assert_equal [], search.ids
   end
 
