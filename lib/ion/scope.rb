@@ -54,7 +54,9 @@ class Ion::Scope
   end
 
   def ids
-    key.zrevrange 0, -1
+    results = key.zrevrange(0, -1)
+    expire
+    results
   end
 
 protected
@@ -64,7 +66,12 @@ protected
     elsif @subkeys.size > 1
       combine @subkeys
     end
-    Ion.expire key # OPT: make sure this is only done once
+    #Ion.expire key # OPT: make sure this is only done once
+  end
+
+  # Sets the TTL for the temp keys.
+  def expire
+    [*[key, @subkeys]].each { |k| Ion.expire k }
   end
 
   def combine(subkeys)
