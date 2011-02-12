@@ -26,16 +26,16 @@ class Ion::Search
     to_a.each &blk
   end
 
-  def ids
-    @scope.ids
-  end
-
   def size
     ids.size
   end
 
   def yieldie(&blk)
     @scope.yieldie &blk
+  end
+
+  def ids
+    @scope.ids
   end
 
   def key

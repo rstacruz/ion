@@ -6,9 +6,10 @@ class Ion::Scope
   attr_reader :key
 
   def initialize(search, parent=nil)
-    @search = search
-    @parent = parent
-    @key    = Ion.volatile_key
+    @search  = search
+    @parent  = parent
+    @key     = Ion.volatile_key
+    @subkeys = Array.new
   end
 
   # Defines the shortcuts `text :foo 'xyz'` => `search :text, :foo, 'xyz'`
@@ -30,8 +31,8 @@ class Ion::Scope
   #   }
   def search(type, field, what, args={})
     subkey = options.index(type, field).search(what)
-    key.zunionstore([key, subkey])  # any_of
     Ion.expire subkey
+    @subkeys << subkey
   end
 
   def options
@@ -44,6 +45,11 @@ class Ion::Scope
 
 protected
   def done
+    if @subkeys.size == 1
+      @key = @subkeys.first      # Use the key as is
+    elsif @subkeys.size > 1
+      key.zunionstore @subkeys   # Combine the keys
+    end
     Ion.expire key
   end
 end
