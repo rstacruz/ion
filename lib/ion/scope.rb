@@ -2,14 +2,27 @@ class Ion::Scope
   include Ion::Helpers
 
   attr_reader :parent
-  attr_reader :search
-  attr_reader :key
+  attr_writer :key
 
-  def initialize(search, parent=nil)
+  def initialize(search, args={})
     @search  = search
-    @parent  = parent
-    @key     = Ion.volatile_key
+    @parent  = args[:parent]
     @subkeys = Array.new
+    @gate    = args[:gate] || :all
+
+    raise Error  unless [:all, :any].include?(@gate)
+  end
+
+  def any_of(&blk)
+    subscope :gate => :any, &blk
+  end
+
+  def all_of(&blk)
+    subscope :gate => :all, &blk
+  end
+
+  def key
+    @key ||= Ion.volatile_key
   end
 
   # Defines the shortcuts `text :foo 'xyz'` => `search :text, :foo, 'xyz'`
@@ -46,10 +59,26 @@ class Ion::Scope
 protected
   def done
     if @subkeys.size == 1
-      @key = @subkeys.first      # Use the key as is
+      self.key = @subkeys.first
     elsif @subkeys.size > 1
-      key.zunionstore @subkeys   # Combine the keys
+      combine @subkeys
     end
-    Ion.expire key
+    Ion.expire key # OPT: make sure this is only done once
+  end
+
+  def combine(subkeys)
+    if @gate == :all
+      key.zinterstore subkeys
+    elsif @gate == :any
+      key.zunionstore subkeys
+    end
+  end
+
+  # Used by all_of and any_of
+  def subscope(args={}, &blk)
+    scope = Ion::Scope.new(@search, { :parent => self }.merge(args))
+    scope.yieldie &blk
+    scope.done
+    @subkeys << scope.key
   end
 end

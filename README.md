@@ -69,17 +69,32 @@ You can also get the raw results easily.
 More neat stuff
 ---------------
 
-Custom:
+### Custom indexing functions
 
-    class Product < Ohm::Model
-      reference :brand, Brand
+    class Book < Ohm::Model
+      attribute :name
+      attribute :synopsis
+      reference :author, Person
 
       ion {
-        text(:brand) { brand.name }
+        text(:author) { author.name }              # Supply your own indexing function
       }
     end
 
-    Product.ion.search { text :brand, "Starfaux" }
+    Book.ion.search { text :author, "Patrick Suskind" }
+
+### Nested conditions
+
+By default, doing a `.search { ... }` does an `all_of` search (that is,
+it must match all the given rules). You can use `any_of` and `all_of`, and
+you may even nest them.
+
+    Book.ion.search {
+      any_of {
+        text :name,     "perfume the story of a murderer"
+        text :synopsis, "perfume the story of a murderer"
+      }
+    }
 
 Extending
 ---------
@@ -100,8 +115,10 @@ Or extend the DSL
 
     class Ion::Scope
       def keywords(what)
-        text :title, what
-        metaphone :artist, what
+        any_of {
+          text :title, what
+          metaphone :artist, what
+        }
       end
     end
 
@@ -125,7 +142,7 @@ Stuff that's not implemented yet
     }
 
     results = Item.ion.search {
-      any_of {                         # TODO: any_of and all_of
+      any_of {
         text :title, "Mac book"
         text :title, "Macbook"
         number :stock, 3

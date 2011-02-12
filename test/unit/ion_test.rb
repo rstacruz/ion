@@ -72,7 +72,12 @@ class IonTest < Test::Unit::TestCase
     album1 = Album.create title: "Yes there it is", body: "Haha"
     album2 = Album.create title: "Yes yeah", body: "Yes you"
 
-    search = Album.ion.search { text :title, "yes"; text :body, "yes" }
+    search = Album.ion.search {
+      any_of {
+        text :title, "yes"
+        text :body,  "yes"
+      }
+    }
 
     # Album2 will go first because it matches both
     assert_equal [album2.id, album1.id], search.ids
