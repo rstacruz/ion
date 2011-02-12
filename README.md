@@ -1,9 +1,10 @@
 Ion
 ===
 
-Search engine.
+A search engine written in Ruby and uses Redis.
 
-Don't use me!
+Ion is under a state merciless refactoring until it reaches a
+useable feature set--use at your own risk :)
 
 Testing
 -------
@@ -97,7 +98,7 @@ Override it with some fancy stuff.
 
 Or extend the DSL
 
-    class Ion::Search
+    class Ion::Scope
       def keywords(what)
         text :title, what
         metaphone :artist, what

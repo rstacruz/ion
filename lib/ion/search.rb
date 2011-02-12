@@ -1,13 +1,11 @@
 class Ion::Search
   include Enumerable
-  include Ion::Helpers
 
-  attr_reader :key
+  attr_reader :options
 
   def initialize(options)
     @options = options
-    @key     = Ion.volatile_key
-    @gate    = :any # or :all
+    @scope   = Ion::Scope.new(self)
   end
 
   # Returns the model.
@@ -29,54 +27,26 @@ class Ion::Search
   end
 
   def ids
-    @key.zrevrange 0, -1
+    @scope.ids
   end
 
   def size
     ids.size
   end
 
+  def yieldie(&blk)
+    @scope.yieldie &blk
+  end
+
+  def key
+    @scope.key
+  end
+
 # Searching
   
-  # TODO: make tests for this first
-  # def any_of(&blk)
-  #   old, @gate = @gate, :any
-  #   yieldie &blk
-  #   @gate = old
-  # end
-
-  # def all_of(&blk)
-  #   old, @gate = @gate, :all
-  #   yieldie &blk
-  #   @gate = old
-  # end
-
-  # Defines the shortcuts `text :foo 'xyz'` => `search :text, :foo, 'xyz'`
-  Ion::Indices.names.each do |type|
-    define_method(type) do |field, what, options={}|
-      search type, field, what, options
-    end
-  end
-
-  # Searches a given field.
-  # @example
-  #   class Album
-  #     ion { text :name }
-  #   end
-  #
-  #   Album.ion.search {
-  #     search :text, :name, "Emotional Technology"
-  #     text :name, "Emotional Technology"   # same
-  #   }
-  def search(type, field, what, options={})
-    subkey = @options.index(type, field).search(what)
-    @key.zunionstore([@key, subkey])  # any_of
-    Ion.expire subkey
-  end
-
 protected
   # Interal: called when the `Model.ion.search { }` block is done
   def done
-    Ion.expire @key
+    @scope.send :done
   end
 end
