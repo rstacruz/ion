@@ -55,7 +55,7 @@ Searching is easy:
       metaphone :artist, "Astral Projection"
     }
 
-The search will be an `Enumerable` object. Go ahead and iterate as you normally would.
+The resutls will be an `Enumerable` object. Go ahead and iterate as you normally would.
 
     results.each do |album|
       puts "Album '#{album.name}' (by #{album.artist})"
@@ -66,8 +66,8 @@ You can also get the raw results easily.
     results.to_a  #=> [<#Album>, <#Album>, ... ]
     results.ids   #=> ["1", "2", "10", ... ]
 
-More neat stuff
----------------
+Features
+--------
 
 ### Custom indexing functions
 
@@ -96,8 +96,8 @@ you may even nest them.
       }
     }
 
-Extending
----------
+Extending Ion
+-------------
 
 Override it with some fancy stuff.
 
@@ -124,10 +124,10 @@ Or extend the DSL
 
     Album.ion.search { keywords "Foo" }
 
-Stuff that's not implemented yet
---------------------------------
+Features in the works
+---------------------
 
-...but will be.
+Stuff that's not implemented yet, but will be.
 
     class Item < Model
       ion {
