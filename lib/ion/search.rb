@@ -2,6 +2,7 @@ class Ion::Search
   include Enumerable
 
   attr_reader :options
+  attr_reader :scope
 
   def initialize(options, &blk)
     @options = options
@@ -16,6 +17,12 @@ class Ion::Search
   #
   def model
     @options.model
+  end
+
+  # Returns a unique hash for the search.
+  def search_hash
+    require 'digest'
+    Digest::MD5.hexdigest @scope.search_hash.inspect
   end
 
   def to_a

@@ -3,6 +3,7 @@ class Ion::Scope
 
   attr_reader :parent
   attr_reader :scopes
+  attr_reader :search_hash
   attr_writer :key
 
   def initialize(search, args={}, &blk)
@@ -13,6 +14,7 @@ class Ion::Scope
     @searchkeys = Array.new
     @gate    = args[:gate] || :all
     @score   = args[:score] || 1.0
+    @search_hash = [[@gate, @score]]
 
     run(&blk)  if block_given?
     raise Ion::Error  unless [:all, :any].include?(@gate)
@@ -57,8 +59,9 @@ class Ion::Scope
   #   }
   def search(type, field, what, args={})
     subkey = options.index(type, field).search(what, args)
-    @searchkeys << subkey
-    @subkeys    << subkey
+    @searchkeys  << subkey
+    @subkeys     << subkey
+    @search_hash << [type,field,what,args]
   end
 
   def options
@@ -72,6 +75,8 @@ class Ion::Scope
   end
 
 protected
+  # Called by #run after doing an instance_eval of DSL stuff.
+  # This consolidates the keys into self.key.
   def done
     if @subkeys.size == 1
       self.key = @subkeys.first
@@ -98,12 +103,12 @@ protected
   def subscope(args={}, &blk)
     opts = {
       :parent => self,
-      :gate => @gate,
-      :score => @score
+      :gate   => @gate,
+      :score  => @score
     }
     scope = Ion::Scope.new(@search, opts.merge(args), &blk)
-    key   = scope.key
-    @subkeys << scope.key
+    @subkeys     << scope.key
+    @search_hash << scope.search_hash
     scope
   end
 
