@@ -7,10 +7,7 @@ class Ion::Options
   end
 
   def search(&blk)
-    search = Ion::Search.new(self)
-    search.yieldie &blk
-    search.send :done
-    search
+    Ion::Search.new(self, &blk)
   end
 
   def key

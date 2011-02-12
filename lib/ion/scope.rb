@@ -4,12 +4,13 @@ class Ion::Scope
   attr_reader :parent
   attr_writer :key
 
-  def initialize(search, args={})
+  def initialize(search, args={}, &blk)
     @search  = search
     @parent  = args[:parent]
     @subkeys = Array.new
     @gate    = args[:gate] || :all
 
+    run(&blk)  if block_given?
     raise Error  unless [:all, :any].include?(@gate)
   end
 
@@ -76,9 +77,12 @@ protected
 
   # Used by all_of and any_of
   def subscope(args={}, &blk)
-    scope = Ion::Scope.new(@search, { :parent => self }.merge(args))
-    scope.yieldie &blk
-    scope.done
+    scope = Ion::Scope.new(@search, { :parent => self }.merge(args), &blk)
     @subkeys << scope.key
+  end
+
+  # Runs a given DSL block.
+  def run(&blk)
+    yieldie(&blk) and done
   end
 end

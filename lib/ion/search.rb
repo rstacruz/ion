@@ -3,9 +3,9 @@ class Ion::Search
 
   attr_reader :options
 
-  def initialize(options)
+  def initialize(options, &blk)
     @options = options
-    @scope   = Ion::Scope.new(self)
+    @scope   = Ion::Scope.new(self, &blk)
   end
 
   # Returns the model.
