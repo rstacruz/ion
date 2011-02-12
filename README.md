@@ -40,7 +40,7 @@ Any ORM will do. As long as you can hook it to update Ion's indices, you'll be f
         metaphone :artist
       }
 
-      # Just call this after saving/deleting
+      # Just call these after saving/deleting
       after  :save,   :update_ion_indices
       before :delete, :delete_ion_indices
     end
@@ -171,3 +171,20 @@ Stuff that's not implemented yet, but will be.
     results.pages
 
     results.facet_counts #=> { :name => { "Ape" => 2, "Banana" => 3 } } ??
+
+Quirks
+------
+
+### Searching with arity
+
+The search DSL may leave some things in accessible since the block will
+be ran through `instance_eval` in another context. You can get around it
+via:
+
+    Book.ion.search { text :name, @name }        # fail
+    Book.ion.search { |q| q.text :name, @name }  # good
+
+Or you may also take advantage of Ruby closures:
+
+    name = @name
+    Book.ion.search { text :name, name }         # good
