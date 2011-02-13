@@ -120,14 +120,12 @@ protected
     # Adjust scores accordingly
     self.key = rescore(key, @score)
 
-    boost_keys = boosts.map do |(scope, amount)|
+    boosts.each do |(scope, amount)|
       inter = Ion.volatile_key
-      inter.zinterstore([key, scope.key], :weights => [0, amount])
+      inter.zinterstore [key, scope.key], :weights => [amount, 0]
+      key.zunionstore [key, inter], :aggregate => (amount > 1 ? :max : :min)
       temp_keys << inter
-      inter
     end
-
-    key.zunionstore [key, *boost_keys]
   end
 
   def rescore(key, score)

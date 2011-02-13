@@ -22,7 +22,20 @@ class BoostTest < Test::Unit::TestCase
     assert_ids %w(c d), for: search, ordered: true
 
     @scores = scores_for search
-    assert_score c: 3.5
+    assert_score c: 2.5
+    assert_score d: 1.0
+  end
+
+  test "scores 2" do
+    search = Album.ion.search {
+      text :title, "bt"
+      boost(0.5) { text :body, "special edition" }
+    }
+
+    assert_ids %w(d c), for: search, ordered: true
+
+    @scores = scores_for search
+    assert_score c: 0.5
     assert_score d: 1.0
   end
 end
