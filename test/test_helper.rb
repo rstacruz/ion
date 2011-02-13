@@ -3,7 +3,6 @@ $:.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'ohm'
 require 'ohm/contrib'
 require 'ion'
-require 'ffaker'
 require 'contest'
 require_relative './p_helper'
 #require_relative './redis_debug'
@@ -22,7 +21,14 @@ class Test::Unit::TestCase
   end
 
   def phrase
-    Faker::Company.bs
+    (0..6).map { words[(words.length * rand).to_i] }.join(' ')
+  end
+
+  def words
+    @w ||=
+      %w(lorem ipsum dolor sit amet consecteteur adicicising elit sed do eiusmod) +
+      %w(tempor incidudunt nam posture magna aliqua ut labore et dolore) +
+      %w(cum sociis nostrud aequitas verificium)
   end
 
   def ids(keys)

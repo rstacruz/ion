@@ -3,7 +3,7 @@ require_relative '../test_helper'
 class IonTest < Test::Unit::TestCase
   setup do
     # Fake entries that should NOT be returned
-    10.times { Album.create title: Faker::Company.bs, body: '' }
+    10.times { Album.create title: phrase, body: '' }
   end
 
   test "single result" do
@@ -29,7 +29,7 @@ class IonTest < Test::Unit::TestCase
 
   test "many results" do
     albums = (0..10).map {
-      Album.create title: "Yo " + Faker::Company.bs, body: "Moshen Kashkan"
+      Album.create title: "Yo #{phrase}", body: "Moshen Kashkan"
     }
 
     search = Album.ion.search { text :title, "Yo" }
