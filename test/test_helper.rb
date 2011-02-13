@@ -21,6 +21,10 @@ class Test::Unit::TestCase
     Ion.redis
   end
 
+  def phrase
+    Faker::Company.bs
+  end
+
   def ids(keys)
     keys.map { |k| @items[k.to_sym].id }
   end

@@ -35,7 +35,7 @@ class Ion::Scope
   end
 
   def count
-    ids.count
+    key.zcard
   end
 
   # Defines the shortcuts `text :foo 'xyz'` => `search :text, :foo, 'xyz'`

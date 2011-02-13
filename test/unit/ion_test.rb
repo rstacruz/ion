@@ -68,6 +68,13 @@ class IonTest < Test::Unit::TestCase
     assert_equal [album2.id], search.ids.sort
   end
 
+  test "count" do
+    10.times { Album.create(title: "Quod libet #{phrase}") }
+
+    search = Album.ion.search { text :title, "quod" }
+    assert_equal 10, search.count
+  end
+
   test "scores" do
     album1 = Album.create title: "Yes there it is", body: "Haha"
     album2 = Album.create title: "Yes yeah", body: "Yes you"

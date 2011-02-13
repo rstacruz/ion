@@ -55,7 +55,7 @@ Searching is easy:
       metaphone :artist, "Astral Projection"
     }
 
-The resutls will be an `Enumerable` object. Go ahead and iterate as you normally would.
+The results will be an `Enumerable` object. Go ahead and iterate as you normally would.
 
     results.each do |album|
       puts "Album '#{album.name}' (by #{album.artist})"
