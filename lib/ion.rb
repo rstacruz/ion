@@ -1,6 +1,7 @@
 require 'redis'
 require 'nest'
 require 'text'
+require 'ostruct'
 
 module Ion
   VERSION = "0.0.1"
@@ -11,6 +12,7 @@ module Ion
   DEFAULT_TTL = 30
 
   autoload :Stringer, "#{PREFIX}/stringer"
+  autoload :Config,   "#{PREFIX}/config"
   autoload :Options,  "#{PREFIX}/options"
   autoload :Search,   "#{PREFIX}/search"
   autoload :Entity,   "#{PREFIX}/entity"
@@ -23,6 +25,14 @@ module Ion
   Error            = Class.new(StandardError)
 
   # Returns the Redis instance that is being used by Ion.
+  def self.config
+    @config ||= Ion::Config.new
+  end
+
+  def self.version
+    VERSION
+  end
+
   def self.redis
     @redis || key.redis
   end
