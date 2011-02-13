@@ -126,7 +126,7 @@ Book.ion.search {
 # "sale" items, but will make any sale items in the current result set
 # rank higher.
 #
-# *(Note: it will add +2.0, not multiply by 2.0. Also, the number is optional. This behavior may change in the future)*
+# This example will boost the score of sale items by x2.0.
 
 Book.ion.search {
   text :name, "The Taking of Sleeping Beauty"
