@@ -25,6 +25,26 @@ class Ion::Search
     Digest::MD5.hexdigest @scope.search_hash.inspect
   end
 
+  def range(args=nil)
+    @range = if args == :all
+        nil
+      elsif args.is_a?(Range)
+        args
+      elsif !args.is_a?(Hash)
+        @range
+      elsif args[:from] && args[:limit]
+        ((args[:from]-1)..(args[:from]-1 + args[:limit]-1))
+      elsif args[:page] && args[:limit]
+        (((args[:page]-1)*args[:limit])..((args[:page])*args[:limit]))
+      elsif args[:from] && args[:to]
+        ((args[:from]-1)..(args[:to]-1))
+      elsif args[:from]
+        ((args[:from]-1)..-1)
+      else
+        @range
+      end || (0..-1)
+  end
+
   def to_a
     ids.map &model
   end
@@ -42,7 +62,7 @@ class Ion::Search
   end
 
   def ids
-    @scope.ids
+    @scope.ids range
   end
 
   def key

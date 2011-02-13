@@ -128,6 +128,28 @@ but will make any sale items in the current result set rank higher.
 
 (Note: it will add +2.0, not multiply by 2.0. Also, the number is optional.)
 
+### Ranges
+
+Limit your searches like so.
+
+    results = Book.ion.search {
+      text :author, "Anne Rice"
+    }
+
+    # Any of these will work.
+    results.range from: 54, limit: 10
+    results.range from: 3
+    results.range page: 1, limit: 30
+    results.range (0..3)
+    results.range (0..-1)
+    results.range from: 3, to: 9
+
+    results.size      # This will not change even if you change the range...
+    results.ids.size  # However, this will.
+
+    # Reset
+    results.range :all
+
 Extending Ion
 -------------
 
@@ -189,10 +211,7 @@ Stuff that's not implemented yet, but will be.
     }
 
     results.sort_by :title
-    results.range from: 54, limit: 10
-
-    results.paginate page: 1, limit: 30
-    results.pages
+    results.sort_by :score, [:author, :asc], :title
 
     results.facet_counts #=> { :name => { "Ape" => 2, "Banana" => 3 } } ??
 

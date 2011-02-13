@@ -70,8 +70,10 @@ class Ion::Scope
     @search.options
   end
 
-  def ids
-    results = key.zrevrange(0, -1)
+  def ids(range)
+    from, to = range.first, range.last
+    to -= 1  if range.exclude_end?
+    results = key.zrevrange(from, to)
     expire and results
   end
 
