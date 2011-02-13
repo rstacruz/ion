@@ -5,11 +5,14 @@ require 'ohm/contrib'
 require 'ion'
 require 'contest'
 require_relative './p_helper'
+require_relative './common_helper'
 #require_relative './redis_debug'
 
 Ion.connect url: (ENV['REDIS_URL'] || 'redis://127.0.0.1:6379/0')
 
 class Test::Unit::TestCase
+  include LoremHelper
+
   def setup
     re = Redis.current
     keys = re.keys("Ion:*") + re.keys("IT::*")
@@ -22,17 +25,6 @@ class Test::Unit::TestCase
 
   def scores_for(search)
     Hash[*search.key.zrange(0, -1, with_scores: true)]
-  end
-
-  def lorem
-    (0..5).map { lorem_words[(lorem_words.length * rand).to_i] }.join(' ')
-  end
-
-  def lorem_words
-    @w ||=
-      %w(lorem ipsum dolor sit amet consecteteur adicicising elit sed do eiusmod) +
-      %w(tempor incidudunt nam posture magna aliqua ut labore et dolore) +
-      %w(cum sociis nostrud aequitas verificium)
   end
 
   def ids(keys)

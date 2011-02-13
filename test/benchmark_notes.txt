@@ -1,0 +1,9 @@
+--------------------------------------------------------------------------
+Monday, Feb 14                             Elapsed    Time per     Records
+12:27 AM                                      time      record     per sec
+--------------------------------------------------------------------------
+Indexing (x5000)                          25426 ms    5 ms/rec    196 /sec
+Searching - one word (x5000)              29574 ms    5 ms/rec    169 /sec
+Searching - three words (x5000)            7607 ms    1 ms/rec    657 /sec
+Searching - 2 fields (x5000)              12755 ms    2 ms/rec    391 /sec
+
