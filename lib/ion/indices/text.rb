@@ -25,7 +25,7 @@ class Indices::Text < Index
     refs = references_key(record)
     refs.smembers.each do |key|
       Ion.redis.zrem(key, record.id)
-      Ion.redis.del(key)  if Ion.redis.zrange(key,0,0).nil?
+      Ion.redis.del(key)  if Ion.redis.zcard(key) == 0
     end
   end
 

@@ -7,11 +7,14 @@ module Ion::Entity
   def update_ion_indices
     ion = self.class.ion
 
+
     # Clear out previous indexes...
     ion.index_types.each { |i_type| i_type.deindex(self) }
 
+    Ion.redis.multi
     # And add new ones
     ion.indices.each { |index| index.index(self) }
+    Ion.redis.exec
   end
 
   # Call me before deletion
