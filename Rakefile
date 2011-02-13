@@ -7,7 +7,7 @@ task :test do
 end
 
 task :irb do
-  system 'irb -r./lib/ion.rb'
+  system 'irb -r./lib/ion.rb -r./test/irb_helpers'
 end
 
 task :default => :test
