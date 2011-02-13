@@ -4,7 +4,7 @@ require 'text'
 require 'ostruct'
 
 module Ion
-  VERSION = "0.0.1"
+  VERSION = "0.0.2"
 
   PREFIX = File.join(File.dirname(__FILE__), 'ion')
 
