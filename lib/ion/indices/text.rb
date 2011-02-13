@@ -34,7 +34,8 @@ class Indices::Text < Index
     words   = search_words(what)
     keys    = words.map { |word| index_key[word] }
 
-    Ion.intersect keys
+    w = keys.map { 0 }; w[0] = 1
+    Ion.intersect keys, weights: w
   end
 end
 end

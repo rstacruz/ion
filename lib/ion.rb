@@ -53,21 +53,20 @@ module Ion
   # Probably best to move this somewhere
 
   # Combines multiple set keys.
-  def self.union(keys)
+  def self.union(keys, options={})
     return keys.first  if keys.size == 1
 
     results = Ion.volatile_key
-    keys.each { |key| results.zunionstore [results, key] }
+    results.zunionstore keys, options
     results
   end
 
   # Finds the intersection in multiple set keys.
-  def self.intersect(keys)
+  def self.intersect(keys, options={})
     return keys.first  if keys.size == 1
 
     results = Ion.volatile_key
-    results.zunionstore [keys.first]
-    keys[1..-1].each { |key| results.zinterstore [results, key] }
+    results.zinterstore keys, options
     results
   end
 end

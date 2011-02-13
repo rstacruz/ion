@@ -93,7 +93,17 @@ class IonTest < Test::Unit::TestCase
 
     # Check if the scores are right
     scores = scores_for search
-    assert_equal "2", scores[@items[:b].id]
-    assert_equal "1", scores[@items[:a].id]
+    assert_equal 2.0, scores[@items[:b].id].to_f
+    assert_equal 1.0, scores[@items[:a].id].to_f
+  end
+
+  test "right scoring" do
+    item = Album.create(title: "Best of Herbie", body: "Herbie Hancock")
+    search = Album.ion.search {
+        text :body, "Herbie Hancock"
+    }
+
+    scores = scores_for search
+    assert_equal 1.0, scores[item.id].to_f
   end
 end
