@@ -20,6 +20,10 @@ class Test::Unit::TestCase
     Ion.redis
   end
 
+  def scores_for(search)
+    Hash[*search.key.zrange(0, -1, with_scores: true)]
+  end
+
   def lorem
     (0..5).map { lorem_words[(lorem_words.length * rand).to_i] }.join(' ')
   end

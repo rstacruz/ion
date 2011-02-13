@@ -27,7 +27,7 @@ class Ion::Scope
   end
 
   def score(score, &blk)
-    scopes << subscope(:score => (score * @score), &blk)
+    scopes << subscope(:score => score, &blk)
   end
 
   def key
@@ -41,7 +41,7 @@ class Ion::Scope
   # Defines the shortcuts `text :foo 'xyz'` => `search :text, :foo, 'xyz'`
   Ion::Indices.names.each do |type|
     define_method(type) do |field, what, args={}|
-      search type, field, what, { :score => @score }.merge(args)
+      search type, field, what, args
     end
   end
 
@@ -84,6 +84,15 @@ protected
     elsif subkeys.size > 1
       combine subkeys
     end
+
+    self.key = rescore(key, @score)
+  end
+
+  def rescore(key, score)
+    return key  if score == 1.0
+    dest = key.include?('~') ? key : Ion.volatile_key
+    dest.zunionstore([key], weights: score)
+    dest
   end
 
   # Sets the TTL for the temp keys.

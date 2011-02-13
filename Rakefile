@@ -6,4 +6,8 @@ task :test do
   end
 end
 
+task :irb do
+  system 'irb -r./lib/ion.rb'
+end
+
 task :default => :test

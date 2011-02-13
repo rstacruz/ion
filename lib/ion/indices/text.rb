@@ -34,11 +34,6 @@ class Indices::Text < Index
     words   = search_words(what)
     keys    = words.map { |word| index_key[word] }
 
-    if args[:score] != 1.0 && !args[:score].nil?
-      # Multiply
-    end
-
-    Ion.expire keys
     Ion.intersect keys
   end
 end

@@ -92,7 +92,7 @@ class IonTest < Test::Unit::TestCase
     assert_ids %w(a b), for: search
 
     # Check if the scores are right
-    scores = Hash[*search.key.zrevrange(0, -1, with_scores: true)]
+    scores = scores_for search
     assert_equal "2", scores[@items[:b].id]
     assert_equal "1", scores[@items[:a].id]
   end

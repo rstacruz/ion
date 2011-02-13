@@ -13,17 +13,33 @@ class Score < Test::Unit::TestCase
     }
   end
 
-  test "nested 1" do
+  test "scores" do
+    return
     search = Album.ion.search {
-      score(2.0) {
+      score(2.5) {
         text :title, "secher"
       }
     }
 
     assert_ids %w(a), for: search
-    return #pending
 
-    # id, score = search.key.zrange(0, -1, with_scores: true)
-    # assert_equal 2, score
+    scores = scores_for search
+    assert_equal 2.5, scores[@items[:a].id].to_f
   end
+
+  test "nested scores" do
+    search = Album.ion.search {
+      score(2.5) {
+        score(2.0) {
+          text :title, "secher"
+        }
+      }
+    }
+
+    assert_ids %w(a), for: search
+
+    scores = scores_for search
+    assert_equal 5.0, scores[@items[:a].id].to_f
+  end
+
 end

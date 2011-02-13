@@ -100,6 +100,19 @@ you may even nest them.
       }
     }
 
+### Important rules
+
+You can make certain rules score higher than the rest. In this example,
+if the search string is found in the name, it'll rank higher than if it
+was found in the synopsis.
+
+    Book.ion.search {
+      any_of {
+        score(5.0) { text :name, "Darkly Dreaming Dexter" }
+        score(1.0) { text :synopsis, "Darkly Dreaming Dexter" }
+      }
+    }
+
 Extending Ion
 -------------
 
@@ -133,6 +146,9 @@ Features in the works
 
 Stuff that's not implemented yet, but will be.
 
+    # TODO: search keyword blacklist
+    Ion.options.ignored_words += %w(at it the)
+
     class Item < Model
       ion {
         text :title
@@ -151,9 +167,6 @@ Stuff that's not implemented yet, but will be.
         text :title, "Macbook"
         number :stock, 3
         number :stock, gt: 3
-      }
-      score(2.0) {                     # TODO: important searches (+relevance)
-        text :title, "Pro"             #       This will be more important (by 2x) than others
       }
       boost(2.0) {                     # TODO: Boost relevance
         text :brand, "Apple"           #       Will boost if brand == "Apple", but will
