@@ -46,8 +46,12 @@ protected
 
   # Ion:Album:references:1:text
   def self.references_key(record)
-    type = self.name.split(':').last.downcase
-    record.class.ion.key[:references][record.id][type]
+    @type ||= self.name.split(':').last.downcase
+
+    # Some caching of sorts
+    id = record.id
+    @ref_keys ||= Hash.new
+    @ref_keys[id] ||= record.class.ion.key[:references][id][@type]
   end
 
   def references_key(record)

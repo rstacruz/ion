@@ -11,9 +11,9 @@ class Indices::Text < Index
   def index(record)
     super
     words = index_words(value_for(record).to_s)
-    refs  = references_key(record)
+    refs  = self.class.references_key(record)
 
-    words.each do |word|
+    words.uniq.each do |word|
       k = index_key[word]
       refs.sadd k
       k.zadd 1, record.id

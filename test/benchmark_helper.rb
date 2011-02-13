@@ -4,6 +4,7 @@ require 'ohm'
 require 'ohm/contrib'
 require 'ion'
 require 'batch'
+require 'benchmark'
 require_relative './p_helper'
 require_relative './common_helper'
 
@@ -27,12 +28,19 @@ class BM
       puts "-"*74
     end
 
+    def time_for(&blk)
+      GC.disable
+      elapsed = Benchmark.realtime &blk
+      GC.enable
+      elapsed
+    end
+
+
     def measure(test, size, &blk)
       start = Time.now
       print "%-40s" % [ "#{test} (x#{size})" ]
-      yield
 
-      elapsed = (Time.now - start) * 1000 # milliseconds
+      elapsed = time_for(&blk) * 1000 #ms
       per     = elapsed / size
       rate    = size / (elapsed / 1000)
 
@@ -48,7 +56,7 @@ class BM
       re.del(*keys)  if keys.any?
 
       k = Album.send :key
-      Batch.each((1..5_000).to_a) do |i|
+      Batch.each((1..900).to_a) do |i|
         #Album.create title: lorem, body: lorem
         k[:all].sadd i
         k[i].hmset :title, lorem, :body, lorem
