@@ -70,6 +70,7 @@ class IT::Album < Ohm::Model
     text :body
     text(:also_title) { self.title }
     number :play_count
+    sort :title
   }
 
   after  :save,   :update_ion_indices

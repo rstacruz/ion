@@ -61,6 +61,10 @@ class Ion::Search
     @scope.yieldie &blk
   end
 
+  def sort_by(what)
+    @scope.sort_by what
+  end
+
   def ids
     @scope.ids range
   end

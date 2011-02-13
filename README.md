@@ -186,6 +186,31 @@ Limit your searches like so:
     Recipe.ion.search { number :serving_size, min: 4 }       # n >= 4
     Recipe.ion.search { number :serving_size, max: 10 }      # n <= 10
 
+### Sorting
+
+First, define a sort index in your model.
+
+    class Element < Ohm::Model
+      attribute :name
+      attribute :protons
+      attribute :electrons
+
+      ion {
+        sort   :name       # <-- like this
+        number :protons
+      }
+    end
+
+Now sort it like so. This will not take the search relevancy scores
+into account.
+
+    results = Element.ion.search { number :protons, gt: 3.5 }
+    results.sort_by :name
+
+Note that this sorting (unlike in Ohm, et al) is case insensitive,
+and takes English articles into account (eg, "The Beatles" will
+come before "Rolling Stones").
+
 Extending Ion
 -------------
 
@@ -220,14 +245,7 @@ Features in the works
 Stuff that's not implemented yet, but will be.
 
     # TODO: search keyword blacklist
-    Ion.options.ignored_words += %w(at it the)
-
-    class Item < Model
-      ion {
-        text :title
-        sort :title                    # TODO: Sorting
-      }
-    end
+    Ion.config.ignored_words += %w(at it the)
 
     Item.ion.search {                  # TODO: Quoted searching
       text :title, 'apple "MacBook Pro"'
@@ -240,8 +258,7 @@ Stuff that's not implemented yet, but will be.
       }
     }
 
-    results.sort_by :title
-    results.sort_by :score, [:author, :asc], :title
+    results.sort_by :name, order: :desc  # TODO: descending sort
 
     results.facet_counts #=> { :name => { "Ape" => 2, "Banana" => 3 } } ??
 

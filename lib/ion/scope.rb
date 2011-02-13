@@ -7,6 +7,7 @@ class Ion::Scope
     @search  = search
     @gate    = args[:gate]  || :all
     @score   = args[:score] || 1.0
+    @type    = :z # or :l
 
     yieldie(&blk) and done  if block_given?
 
@@ -38,8 +39,16 @@ class Ion::Scope
     @key ||= Ion.volatile_key
   end
 
+  def sort_by(what)
+    index = @search.options.index(:sort, what)
+    key.sort by: index.spec, order: "ASC ALPHA", store: key
+  end
+
+  # Only when done
   def count
-    key.zcard
+    return key.zcard  if key.type == "zset"
+    return key.llen   if key.type == "list"
+    0
   end
 
   # Defines the shortcuts `text :foo 'xyz'` => `search :text, :foo, 'xyz'`
@@ -73,7 +82,16 @@ class Ion::Scope
   def ids(range)
     from, to = range.first, range.last
     to -= 1  if range.exclude_end?
-    results = key.zrevrange(from, to)
+    
+    type = key.type
+    results = if type == "zset"
+        key.zrevrange(from, to) 
+      elsif type == "list"
+        key.lrange(from, to)
+      else
+        Array.new
+      end
+
     expire and results
   end
 
