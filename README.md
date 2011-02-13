@@ -127,7 +127,26 @@ rank higher.
       boost(2.0) { text :tags, "sale" }
     }
 
-(Note: it will add +2.0, not multiply by 2.0. Also, the number is optional.)
+(Note: it will add +2.0, not multiply by 2.0. Also, the number is optional. This behavior may change in the future)
+
+### Metaphones
+
+Indexing via metaphones allows you to search by how something sounds like,
+rather than with exact spellings.
+
+    class Person < Ohm::Model
+      attribute :name
+
+      ion {
+        metaphone :name
+      }
+    end
+
+    Person.create name: "Stephane Michael Cook"
+
+    # Any of these will work
+    Person.ion.search { metaphone :name, 'stiefen michel cooke' }
+    Person.ion.search { metaphone :name, 'steven quoc' }
 
 ### Ranges
 
@@ -215,12 +234,7 @@ Stuff that's not implemented yet, but will be.
     }
 
     results = Item.ion.search {
-      any_of {
-        text :title, "Mac book"
-        text :title, "Macbook"
-        number :stock, 3
-        number :stock, gt: 3
-      }
+      text :title, "Macbook"
       exclude {                        # TODO: exclusions
         text :title, "Case"
       }
