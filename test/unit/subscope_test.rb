@@ -3,7 +3,7 @@ require_relative '../test_helper'
 class SubscopeTest < Test::Unit::TestCase
   setup do
     # Fake entries that should NOT be returned
-    10.times { Album.create title: phrase, body: '' }
+    10.times { Album.create title: lorem, body: '' }
 
     @items = {
       :a => Album.create(title: "Secher glite"),

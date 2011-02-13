@@ -20,7 +20,7 @@ Song = IT::Song
 class MetaphoneTest < Test::Unit::TestCase
   setup do
     # Fake entries that should NOT be returned
-    10.times { Song.create title: phrase, body: '' }
+    10.times { Song.create title: lorem, body: '' }
 
     @items = {
       a: Song.create(body: "Stephanie"),

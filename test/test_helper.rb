@@ -20,11 +20,11 @@ class Test::Unit::TestCase
     Ion.redis
   end
 
-  def phrase
-    (0..6).map { words[(words.length * rand).to_i] }.join(' ')
+  def lorem
+    (0..5).map { lorem_words[(lorem_words.length * rand).to_i] }.join(' ')
   end
 
-  def words
+  def lorem_words
     @w ||=
       %w(lorem ipsum dolor sit amet consecteteur adicicising elit sed do eiusmod) +
       %w(tempor incidudunt nam posture magna aliqua ut labore et dolore) +
