@@ -1,0 +1,9 @@
+v0.0.2
+------
+
+ * Make text and metaphone indices handle Unicode strings better.
+
+v0.0.1 -- Feb 13, 2011
+----------------------
+
+ * Initial release.
