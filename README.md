@@ -151,6 +151,22 @@ Limit your searches like so:
     # Reset
     results.range :all
 
+### Number indices
+
+    class Recipe < Ohm::Model
+      attribute :serving_size
+
+      ion {
+        number :serving_size         # Define a number index
+      }
+    end
+
+    Recipe.ion.search { number :serving_size, 1 }            # n == 1
+    Recipe.ion.search { number :serving_size, gt:1 }         # n > 1
+    Recipe.ion.search { number :serving_size, gt:2, lt:5 }   # 2 < n < 5
+    Recipe.ion.search { number :serving_size, min: 4 }       # n >= 4
+    Recipe.ion.search { number :serving_size, max: 10 }      # n <= 10
+
 Extending Ion
 -------------
 
@@ -191,7 +207,6 @@ Stuff that's not implemented yet, but will be.
       ion {
         text :title
         sort :title                    # TODO: Sorting
-        number :stock                  # TODO: Indexing numbers
       }
     end
 

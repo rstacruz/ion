@@ -63,11 +63,13 @@ class IT::Album < Ohm::Model
 
   attribute :title
   attribute :body
+  attribute :play_count
 
   ion {
     text :title
     text :body
     text(:also_title) { self.title }
+    number :play_count
   }
 
   after  :save,   :update_ion_indices
