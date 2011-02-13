@@ -1,0 +1,14 @@
+<% require "./lib/ion" -%>
+Gem::Specification.new do |s|
+  s.name = "ion"
+  s.version = "<%= Ion::VERSION %>"
+  s.summary = %{Simple search engine powered by Redis.}
+  s.description = %Q{Ion is a library that lets you index your records and search them with simple or complex queries.}
+  s.authors = ["Rico Sta. Cruz"]
+  s.email = ["rico@sinefunc.com"]
+  s.homepage = "http://github.com/rstacruz/ion"
+  s.files = <%= Dir["lib/**/*.rb", "README*", "Rakefile", "test/**/*.rb"].inspect %>
+  s.add_dependency "nest", "~> 1.0"
+  s.add_dependency "redis", "~> 2.1"
+  s.add_dependency "text", "~> 0.2.0"
+end

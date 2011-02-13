@@ -3,6 +3,8 @@ require 'nest'
 require 'text'
 
 module Ion
+  VERSION = "0.0.1"
+
   PREFIX = File.join(File.dirname(__FILE__), 'ion')
 
   # How long until search keys expire.
