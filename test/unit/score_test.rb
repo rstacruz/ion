@@ -22,8 +22,8 @@ class ScoreTest < Test::Unit::TestCase
 
     assert_ids %w(a), for: search
 
-    scores = scores_for search
-    assert_equal 2.5, scores[@items[:a].id].to_f
+    @scores = scores_for search
+    assert_score a: 2.5
   end
 
   test "nested scores" do
@@ -37,7 +37,7 @@ class ScoreTest < Test::Unit::TestCase
 
     assert_ids %w(a), for: search
 
-    scores = scores_for search
-    assert_equal 5.0, scores[@items[:a].id].to_f
+    @scores = scores_for search
+    assert_score a: 5.0
   end
 end

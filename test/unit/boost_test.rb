@@ -16,15 +16,13 @@ class BoostTest < Test::Unit::TestCase
   test "scores" do
     search = Album.ion.search {
       text :title, "bt"
-      boost(2.5) {
-        text :body, "special edition"
-      }
+      boost(2.5) { text :body, "special edition" }
     }
 
     assert_ids %w(c d), for: search, ordered: true
 
-    scores = scores_for search
-    assert_equal 3.5, scores[@items[:c].id].to_f
-    assert_equal 1.0, scores[@items[:d].id].to_f
+    @scores = scores_for search
+    assert_score c: 3.5
+    assert_score d: 1.0
   end
 end

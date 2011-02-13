@@ -46,6 +46,12 @@ class Test::Unit::TestCase
       assert_equal ids(keys).sort, args[:for].ids.sort
     end
   end
+
+  def assert_score(hash)
+    hash.each do |key, score|
+      assert_equal score.to_f, @scores[@items[key.to_sym].id].to_f
+    end
+  end
 end
 
 module IT
