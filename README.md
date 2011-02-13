@@ -113,6 +113,21 @@ was found in the synopsis.
       }
     }
 
+### Boosting
+
+You can define rules on what will rank higher.
+
+This is different from score in such that it only boosts current results,
+and doesn't add any. For instance, below, it will not show all "sale" items,
+but will make any sale items in the current result set rank higher.
+
+    Book.ion.search {
+      text :name, "The Taking of Sleeping Beauty"
+      boost(2.0) { text :tags, "sale" }
+    }
+
+(Note: it will add +2.0, not multiply by 2.0. Also, the number is optional.)
+
 Extending Ion
 -------------
 
@@ -167,10 +182,6 @@ Stuff that's not implemented yet, but will be.
         text :title, "Macbook"
         number :stock, 3
         number :stock, gt: 3
-      }
-      boost(2.0) {                     # TODO: Boost relevance
-        text :brand, "Apple"           #       Will boost if brand == "Apple", but will
-                                       #       not return all Apple results
       }
       exclude {                        # TODO: exclusions
         text :title, "Case"

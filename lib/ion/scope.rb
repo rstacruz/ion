@@ -26,6 +26,10 @@ class Ion::Scope
     scopes << subscope(:gate => :all, &blk)
   end
 
+  def boost(amount=1.0, &blk)
+    boosts << [Ion::Scope.new(@search, :gate => :all, &blk), amount]
+  end
+
   def score(score, &blk)
     scopes << subscope(:score => score, &blk)
   end
@@ -57,7 +61,7 @@ class Ion::Scope
   #   }
   def search(type, field, what, args={})
     subkey = options.index(type, field).search(what, args)
-    searchkeys  << subkey
+    temp_keys   << subkey
     subkeys     << subkey
     search_hash << [type,field,what,args]
   end
@@ -72,9 +76,17 @@ class Ion::Scope
   end
 
 protected
+  # List of scopes to be cleaned up after. (Array of Scope instances)
   def scopes()     @scopes ||= Array.new end
+
+  # List of keys that contain results to be combined.
   def subkeys()    @subkeys ||= Array.new end
-  def searchkeys() @searchkeys ||= Array.new end
+
+  # List of keys (like search keys) to be cleaned up after.
+  def temp_keys()  @temp_keys ||= Array.new end
+
+  # List of boost scopes -- [Scope, amount] tuples
+  def boosts()     @boosts ||= Array.new end
 
   # Called by #run after doing an instance_eval of DSL stuff.
   # This consolidates the keys into self.key.
@@ -85,7 +97,17 @@ protected
       combine subkeys
     end
 
+    # Adjust scores accordingly
     self.key = rescore(key, @score)
+
+    boost_keys = boosts.map do |(scope, amount)|
+      inter = Ion.volatile_key
+      inter.zinterstore([key, scope.key], :weights => [0, amount])
+      temp_keys << inter
+      inter
+    end
+
+    key.zunionstore [key, *boost_keys]
   end
 
   def rescore(key, score)
@@ -98,7 +120,7 @@ protected
   # Sets the TTL for the temp keys.
   def expire
     scopes.each { |s| s.send :expire }
-    Ion.expire key, *searchkeys
+    Ion.expire key, *temp_keys
   end
 
   def combine(subkeys)
