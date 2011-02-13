@@ -3,7 +3,7 @@ require_relative '../test_helper'
 class IonTest < Test::Unit::TestCase
   setup do
     # Fake entries that should NOT be returned
-    10.times { Album.create title: lorem, body: '' }
+    5.times { Album.create title: lorem, body: '' }
   end
 
   test "single result" do
@@ -69,10 +69,10 @@ class IonTest < Test::Unit::TestCase
   end
 
   test "count" do
-    10.times { Album.create(title: "Bebel Gilberto #{lorem}") }
+    5.times { Album.create(title: "Bebel Gilberto #{lorem}") }
 
     search = Album.ion.search { text :title, "Bebel Gilberto" }
-    assert_equal 10, search.count
+    assert_equal 5, search.count
   end
 
   test "scores" do
