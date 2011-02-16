@@ -23,8 +23,8 @@ class BM
       end
 
       puts "-"*74
-      puts "%-40s%10s%12s%12s" % [ Time.now.strftime('%A, %b %d'), 'Elapsed', 'Time per', 'Records' ]
-      puts "%-40s%10s%12s%12s" % [ Time.now.strftime('%l:%M %p'),  'time',    'record',   'per sec' ]
+      puts "%-40s%10s%12s" % [ Time.now.strftime('%A, %b %d'), 'Elapsed', 'Records' ]
+      puts "%-40s%10s%12s" % [ Time.now.strftime('%l:%M %p'),  'time',    'per sec' ]
       puts "-"*74
     end
 
@@ -44,19 +44,19 @@ class BM
       per     = elapsed / size
       rate    = size / (elapsed / 1000)
 
-      puts "%10s%12s%12s" % [ "#{elapsed.to_i} ms", "#{per.to_i} ms/rec", "#{rate.to_i} /sec" ]
+      puts "%10s%12s" % [ "#{elapsed.to_i} ms", "#{rate.to_i} /sec" ]
     end
 
     def re
       Ion.redis
     end
 
-    def spawn
+    def spawn(size=5000)
       keys = re.keys("IonBenchmark:*")
       re.del(*keys)  if keys.any?
 
       k = Album.send :key
-      Batch.each((1..5000).to_a) do |i|
+      Batch.each((1..size).to_a) do |i|
         #Album.create title: lorem, body: lorem
         k[:all].sadd i
         k[i].hmset :title, lorem, :body, lorem

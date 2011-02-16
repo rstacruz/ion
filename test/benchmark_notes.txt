@@ -1,9 +1,40 @@
---------------------------------------------------------------------------
-Monday, Feb 14                             Elapsed    Time per     Records
-12:27 AM                                      time      record     per sec
---------------------------------------------------------------------------
-Indexing (x5000)                          25426 ms    5 ms/rec    196 /sec
-Searching - one word (x5000)              29574 ms    5 ms/rec    169 /sec
-Searching - three words (x5000)            7607 ms    1 ms/rec    657 /sec
-Searching - 2 fields (x5000)              12755 ms    2 ms/rec    391 /sec
+*********************************************************************
+
+5000 records
+
+---------------------------------------------------------------
+Wednesday, Feb 16                          Elapsed      Records
+ 2:16 PM                                      time      per sec
+---------------------------------------------------------------
+Indexing (x5000)                          21114 ms     236 /sec
+Searching - one word (x5000)                912 ms    5477 /sec
+Searching - three words (x5000)            3223 ms    1551 /sec
+Searching - 2 fields (x5000)               2446 ms    2043 /sec
+
+
+*********************************************************************
+
+10000 records
+
+---------------------------------------------------------------
+Wednesday, Feb 16                          Elapsed      Records
+ 2:23 PM                                      time      per sec
+---------------------------------------------------------------
+Indexing (x10000)                         46449 ms     215 /sec
+Searching - one word (x5000)                920 ms    5430 /sec
+Searching - three words (x5000)            3737 ms    1337 /sec
+Searching - 2 fields (x5000)               3460 ms    1444 /sec
+
+*********************************************************************
+
+20000 records
+
+---------------------------------------------------------------
+Wednesday, Feb 16                          Elapsed      Records
+ 2:25 PM                                      time      per sec
+---------------------------------------------------------------
+Indexing (x20000)                        103154 ms     193 /sec
+Searching - one word (x5000)               1034 ms    4831 /sec
+Searching - three words (x5000)            3848 ms    1299 /sec
+Searching - 2 fields (x5000)               2868 ms    1743 /sec
 

@@ -48,6 +48,7 @@ end
 
 Object.send :include, Util
 
+desc "Starts redis."
 task :'redis:start' do
   if redis?
     info "Redis is running at #{redis_pid} (port #{redis_port}) -- `rake redis:stop` to stop."
@@ -57,28 +58,33 @@ task :'redis:start' do
   end
 end
 
+desc "Stops redis."
 task :'redis:stop' do
   info "Stopping redis..."
   system "redis-cli -p #{redis_port} shutdown"
 end
 
+desc "Runs tests."
 task :'test' => :'redis:start' do
   ENV['REDIS_URL'] = redis_url(0)
   Dir['test/**/*_test.rb'].each { |f| load f }
 end
 
-task :'bm:start' => :'redis:start' do
+desc "Runs benchmarks."
+task :'bm' => :'redis:start' do
   ENV['REDIS_URL'] = redis_url(1)
   require 'benchmark_helper'
   Dir['test/benchmark/*_benchmark.rb'].each { |f| load f }
 end
 
+desc "Spawns items for benchmarking."
 task :'bm:spawn' => :'redis:start' do
   ENV['REDIS_URL'] = redis_url(1)
   require 'benchmark_helper'
-  BM.spawn
+  BM.spawn((ENV['BM_SIZE'] || 5000).to_i)
 end
 
+desc "Indexes items for benchmarking."
 task :'bm:index' => :'redis:start' do
   ENV['REDIS_URL'] = redis_url(1)
   require 'benchmark_helper'
