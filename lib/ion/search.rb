@@ -67,6 +67,10 @@ class Ion::Search
     @scope.key
   end
 
+  def to_hash
+    @scope.to_hash
+  end
+
 # Searching
   
 protected

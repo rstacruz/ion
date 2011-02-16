@@ -1,5 +1,8 @@
 class Ion::Scope
+  require File.expand_path('../scope/hash', __FILE__)
+
   include Ion::Helpers
+  include Ion::Scope::Hash
 
   def initialize(search, args={}, &blk)
     @search  = search
@@ -98,6 +101,7 @@ protected
   # List of boost scopes -- [Scope, amount] tuples
   def boosts()     @boosts ||= Array.new end
 
+  # List of searches to do (tuple of [index, arguments])
   def searches()   @searches ||= Array.new end
 
   def get_key

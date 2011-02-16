@@ -13,6 +13,12 @@ class Ion::Index
     @lambda  ||= Proc.new { self.send(name) }
   end
 
+  def to_hash
+    { 'type' => self.class.name.split(':').last.downcase,
+      'name' => @name
+    }
+  end
+
   # Indexes a record
   def index(record)
   end

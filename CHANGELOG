@@ -7,6 +7,8 @@ v0.0.2
 
  * Defer actual searching until results are needed.
 
+ * Implement Search#to_hash. (eventually, .load_hash too)
+
 v0.0.1 -- Feb 13, 2011
 ----------------------
 
