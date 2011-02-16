@@ -14,9 +14,13 @@ class Ion::Index
   end
 
   def to_hash
-    { 'type' => self.class.name.split(':').last.downcase,
+    { 'type' => type,
       'name' => @name
     }
+  end
+
+  def type
+    self.class.name.split(':').last.downcase
   end
 
   # Indexes a record

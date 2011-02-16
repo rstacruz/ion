@@ -14,4 +14,18 @@ module Ion::Scope::Hash
     h['boosts'] = boosts.map { |(scope, amount)| { 'scope' => scope.to_hash, 'amount' => amount.to_f } }  if boosts.any?
     h
   end
+
+  def to_s
+    a, b = Array.new, Array.new
+    sep = (@gate == :any) ? ' | ' : ' & '
+
+    a += searches.map { |(ix, (what, _))| "#{ix.name}/#{ix.type}:\"#{what.gsub('"', '\"')}\"" }
+    a += scopes.map { |scope| "(#{scope})" }
+
+    b << a.join(sep)  if a.any?
+    b << "*#{@score}"  if @score != 1.0
+    b += boosts.map { |(scope, amount)| "(#{scope} +*#{amount})" }
+
+    b.join(' ')
+  end
 end

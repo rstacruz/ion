@@ -34,15 +34,17 @@ class HashTest < Test::Unit::TestCase
       any_of {
         text :body, "betrib"
         text :body, "betrib"
-        any_of {
+        score(2.5) {
           text :body, "betrib"
         }
       }
+      boost(2.0) { text :title, "x" }
     }
   end
 
   test "hash test" do
     assert_equal @search1.to_hash, @search2.to_hash
     assert @search3.to_hash != @search2.to_hash
+    puts @search3.scope.to_s
   end
 end
