@@ -70,25 +70,22 @@ task :'test' => :'redis:start' do
   Dir['test/**/*_test.rb'].each { |f| load f }
 end
 
-desc "Runs benchmarks."
-task :'bm' => :'redis:start' do
-  ENV['REDIS_URL'] = redis_url(1)
-  require 'benchmark_helper'
-  Dir['test/benchmark/*_benchmark.rb'].each { |f| load f }
-end
-
 desc "Spawns items for benchmarking."
 task :'bm:spawn' => :'redis:start' do
   ENV['REDIS_URL'] = redis_url(1)
-  require 'benchmark_helper'
-  BM.spawn((ENV['BM_SIZE'] || 5000).to_i)
+  load './test/benchmark/spawn.rb'
 end
 
-desc "Indexes items for benchmarking."
+desc "Run the index benchmark."
 task :'bm:index' => :'redis:start' do
   ENV['REDIS_URL'] = redis_url(1)
-  require 'benchmark_helper'
-  Dir['test/benchmark/index.rb'].each { |f| load f }
+  load './test/benchmark/index.rb'
+end
+
+desc "Run the index benchmark."
+task :'bm:search' => :'redis:start' do
+  ENV['REDIS_URL'] = redis_url(1)
+  load './test/benchmark/search.rb'
 end
 
 task :redis => :'redis:start'

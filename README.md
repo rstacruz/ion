@@ -6,16 +6,6 @@ A search engine written in Ruby and uses Redis.
 Ion is under a state merciless refactoring until it reaches a
 useable feature set--use at your own risk :)
 
-Testing
--------
-
-    rvm 1.9.2-p136@ion --rvmrc --create
-    redis-server
-    rvm gemset import  # or install gems in .gems
-
-    export REDIS_URL=redis://127.0.0.1:6379/0  # optional, this is the default
-    rake test
-
 Usage
 -----
 
@@ -278,3 +268,34 @@ Or you may also take advantage of Ruby closures:
 
     name = @name
     Book.ion.search { text :name, name }         # good
+
+Testing
+-------
+
+Install the needed gems.
+
+    rvm 1.9.2-p136@ion --rvmrc --create
+    rvm gemset import  # or install gems in .gems
+
+Run the tests. This will automatically spawn Redis.
+
+    rake test
+
+Running benchmarks
+------------------
+
+First, populate the database. You need this to run the other benchmarks.
+This will automatically spawn Redis.
+
+    rake bm:spawn
+    BM_SIZE=20000 rake bm:spawn     # If you want a bigger DB size
+
+Then run the indexing benchmark. You will need this to run the other
+benchmarks as well.
+
+    rake bm:index
+
+The other available benchmarks are:
+
+    rake bm:search
+

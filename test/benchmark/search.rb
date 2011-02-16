@@ -1,3 +1,5 @@
+require File.expand_path('../../benchmark_helper', __FILE__)
+
 class IonMark < BM
   setup
   size = 5000

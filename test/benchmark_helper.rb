@@ -3,7 +3,6 @@ $:.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'ohm'
 require 'ohm/contrib'
 require 'ion'
-require 'batch'
 require 'benchmark'
 require_relative './p_helper'
 require_relative './common_helper'
@@ -35,7 +34,6 @@ class BM
       elapsed
     end
 
-
     def measure(test, size, &blk)
       start = Time.now
       print "%-40s" % [ "#{test} (x#{size})" ]
@@ -46,42 +44,25 @@ class BM
 
       puts "%10s%12s" % [ "#{elapsed.to_i} ms", "#{rate.to_i} /sec" ]
     end
-
-    def re
-      Ion.redis
-    end
-
-    def spawn(size=5000)
-      keys = re.keys("IonBenchmark:*")
-      re.del(*keys)  if keys.any?
-
-      k = Album.send :key
-      Batch.each((1..size).to_a) do |i|
-        #Album.create title: lorem, body: lorem
-        k[:all].sadd i
-        k[i].hmset :title, lorem, :body, lorem
-      end
-    end
   end
 end
 
 module IonBenchmark
-end
+  class Album < Ohm::Model
+    include Ion::Entity
+    include Ohm::Callbacks
 
-class IonBenchmark::Album < Ohm::Model
-  include Ion::Entity
-  include Ohm::Callbacks
+    attribute :title
+    attribute :body
 
-  attribute :title
-  attribute :body
+    ion {
+      text :title
+      text :body
+    }
 
-  ion {
-    text :title
-    text :body
-  }
-
-  #after  :save,   :update_ion_indices
-  #before :delete, :delete_ion_indices
+    # after  :save,   :update_ion_indices
+    # before :delete, :delete_ion_indices
+  end
 end
 
 Album = IonBenchmark::Album
