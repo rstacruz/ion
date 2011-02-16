@@ -21,10 +21,9 @@ class BM
         exit
       end
 
-      puts "-"*74
-      puts "%-40s%10s%12s" % [ Time.now.strftime('%A, %b %d'), 'Elapsed', 'Records' ]
-      puts "%-40s%10s%12s" % [ Time.now.strftime('%l:%M %p'),  'time',    'per sec' ]
-      puts "-"*74
+      puts "-"*62
+      puts "%-40s%10s%12s" % [ Time.now.strftime('%A, %b %d -- %l:%M %p'), 'Elapsed', 'Rate' ]
+      puts "-"*62
     end
 
     def time_for(&blk)

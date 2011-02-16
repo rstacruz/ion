@@ -1,22 +1,14 @@
 class Ion::Scope
   include Ion::Helpers
 
-  attr_writer :key
-
   def initialize(search, args={}, &blk)
     @search  = search
     @gate    = args[:gate]  || :all
     @score   = args[:score] || 1.0
     @type    = :z # or :l
 
-    yieldie(&blk) and done  if block_given?
-
     raise Ion::Error  unless [:all, :any].include?(@gate)
-  end
-
-  # Returns a unique hash of what the scope contains.
-  def search_hash
-    @search_hash ||= [[@gate, @score]]
+    yieldie(&blk)  if block_given?
   end
 
   def any_of(&blk)
@@ -36,16 +28,18 @@ class Ion::Scope
   end
 
   def key
-    @key ||= Ion.volatile_key
+    @key ||= get_key
   end
 
   def sort_by(what)
+    key
     index = @search.options.index(:sort, what)
     key.sort by: index.spec, order: "ASC ALPHA", store: key
   end
 
   # Only when done
   def count
+    key
     return key.zcard  if key.type == "zset"
     return key.llen   if key.type == "list"
     0
@@ -69,10 +63,7 @@ class Ion::Scope
   #     text :name, "Emotional Technology"   # same
   #   }
   def search(type, field, what, args={})
-    subkey = options.index(type, field).search(what, args)
-    temp_keys   << subkey
-    subkeys     << subkey
-    search_hash << [type,field,what,args]
+    searches << [ options.index(type, field), [what, args] ]
   end
 
   def options
@@ -80,6 +71,8 @@ class Ion::Scope
   end
 
   def ids(range)
+    key
+
     from, to = range.first, range.last
     to -= 1  if range.exclude_end?
     
@@ -99,37 +92,43 @@ protected
   # List of scopes to be cleaned up after. (Array of Scope instances)
   def scopes()     @scopes ||= Array.new end
 
-  # List of keys that contain results to be combined.
-  def subkeys()    @subkeys ||= Array.new end
-
   # List of keys (like search keys) to be cleaned up after.
   def temp_keys()  @temp_keys ||= Array.new end
 
   # List of boost scopes -- [Scope, amount] tuples
   def boosts()     @boosts ||= Array.new end
 
-  # Called by #run after doing an instance_eval of DSL stuff.
-  # This consolidates the keys into self.key.
-  def done
-    if subkeys.size == 1
-      self.key = subkeys.first
-    elsif subkeys.size > 1
-      combine subkeys
-    end
+  def searches()   @searches ||= Array.new end
+
+  def get_key
+    # Wrap up it's subscopes
+    scope_keys = scopes.map(&:key)
+
+    # Wrap up the searches
+    search_keys = searches.map { |(index, args)| index.search(*args) }
+    @temp_keys = search_keys
+
+    # Intersect or union all the subkeys
+    key = combine(scope_keys + search_keys)
 
     # Adjust scores accordingly
-    self.key = rescore(key, @score)
+    key = rescore(key, @score)  if @score != 1.0 && !key.nil?
 
+    # Don't proceed if there are no results anyway
+    return Ion.volatile_key  if key.nil?
+
+    # Process boosts
     boosts.each do |(scope, amount)|
       inter = Ion.volatile_key
       inter.zinterstore [key, scope.key], :weights => [amount, 0]
       key.zunionstore [key, inter], :aggregate => (amount > 1 ? :max : :min)
-      temp_keys << inter
+      @temp_keys << inter
     end
+
+    key
   end
 
   def rescore(key, score)
-    return key  if score == 1.0
     dest = key.include?('~') ? key : Ion.volatile_key
     dest.zunionstore([key], weights: score)
     dest
@@ -142,20 +141,22 @@ protected
   end
 
   def combine(subkeys)
+    return nil  if subkeys.empty?
+    return subkeys.first  if subkeys.size == 1
+
+    _key = Ion.volatile_key
     if @gate == :all
-      key.zinterstore subkeys
+      _key.zinterstore subkeys
     elsif @gate == :any
-      key.zunionstore subkeys
+      _key.zunionstore subkeys
     end
+
+    _key
   end
 
   # Used by all_of and any_of
   def subscope(args={}, &blk)
     opts  = { :gate => @gate, :score => @score }
-    scope = Ion::Scope.new(@search, opts.merge(args), &blk)
-
-    subkeys     << scope.key
-    search_hash << scope.search_hash
-    scope
+    Ion::Scope.new(@search, opts.merge(args), &blk)
   end
 end

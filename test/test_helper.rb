@@ -24,6 +24,7 @@ class Test::Unit::TestCase
   end
 
   def scores_for(search)
+    search.ids
     Hash[*search.key.zrange(0, -1, with_scores: true)]
   end
 

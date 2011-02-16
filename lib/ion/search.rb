@@ -19,12 +19,6 @@ class Ion::Search
     @options.model
   end
 
-  # Returns a unique hash for the search.
-  def search_hash
-    require 'digest'
-    Digest::MD5.hexdigest @scope.search_hash.inspect
-  end
-
   def range(args=nil)
     @range = if args == :all
         nil
