@@ -45,6 +45,17 @@ class HashTest < Test::Unit::TestCase
   test "hash test" do
     assert_equal @search1.to_hash, @search2.to_hash
     assert @search3.to_hash != @search2.to_hash
-    # puts @search3.inspect
+  end
+
+  test "load from hash" do
+    hash = {"scopes"=>[{"gate"=>"any", "scopes"=>[{"gate"=>"any", "score"=>2.5, "searches"=>[{"index"=>{"type"=>"text", "name"=>"body"}, "value"=>"betrib"}]}], "searches"=>[{"index"=>{"type"=>"text", "name"=>"body"}, "value"=>"betrib"}, {"index"=>{"type"=>"text", "name"=>"body"}, "value"=>"betrib"}]}], "searches"=>[{"index"=>{"type"=>"text", "name"=>"title"}, "value"=>"Vloop"}, {"index"=>{"type"=>"text", "name"=>"body"}, "value"=>"Secher betrib"}], "boosts"=>[{"scope"=>{"searches"=>[{"index"=>{"type"=>"text", "name"=>"title"}, "value"=>"x"}]}, "amount"=>2.0}]}
+    h = Album.ion.search hash
+    assert @search3.to_hash == h.to_hash
+  end
+
+  test "load from hash 2" do
+    hash = @search1.to_hash
+    h = Album.ion.search hash
+    assert @search2.to_hash == h.to_hash
   end
 end

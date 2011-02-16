@@ -6,8 +6,8 @@ class Ion::Options
     @indices = Hash.new { |h, k| h[k] = Hash.new }
   end
 
-  def search(&blk)
-    Ion::Search.new(self, &blk)
+  def search(spec=nil, &blk)
+    Ion::Search.new(self, spec, &blk)
   end
 
   def key

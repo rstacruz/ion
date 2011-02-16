@@ -14,8 +14,8 @@ class Ion::Index
   end
 
   def to_hash
-    { 'type' => type,
-      'name' => @name
+    { 'type' => type.to_s,
+      'name' => @name.to_s
     }
   end
 

@@ -19,7 +19,7 @@ module Ion::Scope::Hash
     a, b = Array.new, Array.new
     sep = (@gate == :any) ? ' | ' : ' & '
 
-    a += searches.map { |(ix, (what, _))| "#{ix.name}/#{ix.type}:\"#{what.gsub('"', '\"')}\"" }
+    a += searches.map { |(ix, (what, _))| "#{ix.name}.#{ix.type}:\"#{what.gsub('"', '\"')}\"" }
     a += scopes.map { |scope| "(#{scope})" }
 
     b << a.join(sep)  if a.any?
@@ -27,5 +27,25 @@ module Ion::Scope::Hash
     b += boosts.map { |(scope, amount)| "(#{scope} +*#{amount})" }
 
     b.join(' ')
+  end
+
+  # Unpack the given hash.
+  def deserialize(args)
+    if args['searches']
+      args['searches'].each do |h|
+        index = h['index']
+        search index['type'].to_sym, index['name'].to_sym, h['value']
+      end
+    end
+
+    if args['scopes']
+      args['scopes'].each { |h| scopes << subscope(h) }
+    end
+
+    if args['boosts']
+      args['boosts'].each do |h|
+        boost h['amount'], h['scope']
+      end
+    end
   end
 end

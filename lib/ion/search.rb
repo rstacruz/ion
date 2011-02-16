@@ -4,9 +4,15 @@ class Ion::Search
   attr_reader :options
   attr_reader :scope
 
-  def initialize(options, &blk)
+  def initialize(options, spec, &blk)
     @options = options
-    @scope   = Ion::Scope.new(self, &blk)
+    @scope = if block_given?
+        Ion::Scope.new(self, &blk)
+      elsif spec.is_a?(Hash)
+        Ion::Scope.new(self, spec)
+      else
+        raise Ion::Error, "Invalid search"
+      end
   end
 
   # Returns the model.

@@ -6,28 +6,30 @@ class Ion::Scope
 
   def initialize(search, args={}, &blk)
     @search  = search
-    @gate    = args[:gate]  || :all
-    @score   = args[:score] || 1.0
-    @type    = :z # or :l
+    @gate    = (args.delete('gate') || :all).to_sym
+    @score   = (args.delete('score') || 1.0).to_f
 
     raise Ion::Error  unless [:all, :any].include?(@gate)
     yieldie(&blk)  if block_given?
+
+    deserialize args  if args.any?
   end
 
   def any_of(&blk)
-    scopes << subscope(:gate => :any, &blk)
+    scopes << subscope('gate' => :any, &blk)
   end
 
   def all_of(&blk)
-    scopes << subscope(:gate => :all, &blk)
+    scopes << subscope('gate' => :all, &blk)
   end
 
-  def boost(amount=1.0, &blk)
-    boosts << [Ion::Scope.new(@search, :gate => :all, &blk), amount]
+  def boost(amount=1.0, options={}, &blk)
+    options['gate'] = :all
+    boosts << [Ion::Scope.new(@search, options, &blk), amount]
   end
 
   def score(score, &blk)
-    scopes << subscope(:score => score, &blk)
+    scopes << subscope('score' => score, &blk)
   end
 
   def key
@@ -160,7 +162,7 @@ protected
 
   # Used by all_of and any_of
   def subscope(args={}, &blk)
-    opts  = { :gate => @gate, :score => @score }
+    opts  = { 'gate' => @gate, 'score' => @score }
     Ion::Scope.new(@search, opts.merge(args), &blk)
   end
 end
