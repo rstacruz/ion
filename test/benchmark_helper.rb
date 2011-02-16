@@ -56,7 +56,7 @@ class BM
       re.del(*keys)  if keys.any?
 
       k = Album.send :key
-      Batch.each((1..2000).to_a) do |i|
+      Batch.each((1..5000).to_a) do |i|
         #Album.create title: lorem, body: lorem
         k[:all].sadd i
         k[i].hmset :title, lorem, :body, lorem
