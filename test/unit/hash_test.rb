@@ -45,6 +45,6 @@ class HashTest < Test::Unit::TestCase
   test "hash test" do
     assert_equal @search1.to_hash, @search2.to_hash
     assert @search3.to_hash != @search2.to_hash
-    puts @search3.scope.to_s
+    # puts @search3.inspect
   end
 end

@@ -71,6 +71,10 @@ class Ion::Search
     @scope.to_hash
   end
 
+  def inspect
+    "#<#{self.class.name}: [#{@scope.to_s}]>"
+  end
+
 # Searching
   
 protected
