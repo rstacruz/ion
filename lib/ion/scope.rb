@@ -68,7 +68,9 @@ class Ion::Scope
   #     text :name, "Emotional Technology"   # same
   #   }
   def search(type, field, what, args={})
-    searches << [ options.index(type, field), [what, args] ]
+    index = options.index(type, field)
+    raise Ion::Error, "No such index: #{type}/#{field}"  if index.nil?
+    searches << [ index, [what, args] ]
   end
 
   def options
