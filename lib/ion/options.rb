@@ -1,9 +1,14 @@
 class Ion::Options
   attr_reader :model
 
-  def initialize(model)
+  def initialize(model, options={})
     @model = model
     @indices = Hash.new { |h, k| h[k] = Hash.new }
+
+    # deserialize
+    if options['indices']
+      options['indices'].each { |h| field h['type'], h['name'] }
+    end
   end
 
   def search(spec=nil, &blk)
@@ -18,7 +23,7 @@ class Ion::Options
   # @example
   #   @options.index(:text, :title) #=> <#Ion::Indices::Text>
   def index(type, name)
-    @indices[type][name]
+    @indices[type.to_sym][name.to_sym]
   end
 
   # Returns all indices.
@@ -28,6 +33,10 @@ class Ion::Options
 
   def index_types
     indices.map(&:class).uniq
+  end
+
+  def to_hash
+    { 'indices' => indices.map { |ix| ix.to_hash } }
   end
 
 protected
@@ -40,7 +49,7 @@ protected
 
   def field(type, id, options={}, &blk)
     index_type = Ion::Indices.get(type)
-    @indices[type][id.to_sym] = index_type.new(id, self, options, &blk)
+    @indices[type.to_sym][id.to_sym] = index_type.new(id.to_sym, self, options, &blk)
   end
 end
 

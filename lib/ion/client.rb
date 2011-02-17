@@ -1,4 +1,5 @@
 require 'json'
+require 'restclient'
 
 # Note: this class aims to be decoupled from the rest of Ion,
 # so don't go making things like "model[id].ion" or something

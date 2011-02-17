@@ -42,8 +42,8 @@ module Ion::Entity
     #   Artist.ion.indices
     #   Artist.ion.search { ... }
     #
-    def ion(&blk)
-      @ion_options ||= Ion::Options.new(self)
+    def ion(options={}, &blk)
+      @ion_options ||= Ion::Options.new(self, options)
       @ion_options.instance_eval(&blk)  if block_given?
       @ion_options
     end
