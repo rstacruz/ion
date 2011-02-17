@@ -70,22 +70,13 @@ task :'test' => :'redis:start' do
   Dir['test/**/*_test.rb'].each { |f| load f }
 end
 
-desc "Spawns items for benchmarking."
-task :'bm:spawn' => :'redis:start' do
-  ENV['REDIS_URL'] = redis_url(1)
-  load './test/benchmark/spawn.rb'
-end
-
-desc "Run the index benchmark."
-task :'bm:index' => :'redis:start' do
-  ENV['REDIS_URL'] = redis_url(1)
-  load './test/benchmark/index.rb'
-end
-
-desc "Run the index benchmark."
-task :'bm:search' => :'redis:start' do
-  ENV['REDIS_URL'] = redis_url(1)
-  load './test/benchmark/search.rb'
+Dir['test/benchmark/*.rb'].each do |f|
+  base = File.basename(f, '.*')
+  desc "Run the '#{base}' benchmark."
+  task :"bm:#{base}" => :'redis:start' do
+    ENV['REDIS_URL'] = redis_url(1)
+    load f
+  end
 end
 
 task :redis => :'redis:start'
