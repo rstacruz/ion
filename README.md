@@ -1,7 +1,7 @@
 Ion
 ===
 
-A search engine written in Ruby and uses Redis.
+#### A search engine written in Ruby and uses Redis.
 
 Ion is under a state merciless refactoring until it reaches a
 useable feature set--use at your own risk :)
