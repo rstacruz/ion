@@ -7,8 +7,10 @@ Gem::Specification.new do |s|
   s.authors = ["Rico Sta. Cruz"]
   s.email = ["rico@sinefunc.com"]
   s.homepage = "http://github.com/rstacruz/ion"
-  s.files = <%= Dir["{lib,test}/**/*", "README*", "CHANGELOG*", "Rakefile"].inspect %>
+  s.files = <%= Dir["{lib,test}/**/*", "README*", "CHANGELOG*", "Rakefile"].reject { |f| File.directory?(f) }.inspect %>
+
   s.add_dependency "nest", "~> 1.0"
   s.add_dependency "redis", "~> 2.1"
   s.add_dependency "text", "~> 0.2.0"
+  s.add_dependency "rest-client", "~> 1.6"
 end

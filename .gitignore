@@ -2,3 +2,4 @@
 .rvmrc
 pkg/
 db/
+vendor/

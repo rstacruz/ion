@@ -21,6 +21,7 @@ module Ion
   autoload :Scope,    "#{PREFIX}/scope"
   autoload :Wrapper,  "#{PREFIX}/wrapper"
   autoload :Helpers,  "#{PREFIX}/helpers"
+  autoload :Client,   "#{PREFIX}/client"
 
   InvalidIndexType = Class.new(StandardError)
   Error            = Class.new(StandardError)

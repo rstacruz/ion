@@ -2,6 +2,7 @@
 redis -v2.1.1
 text -v0.2.0
 nest -v1.1.0
+rest-client -v1.6.1
 
 # Test
 contest -v0.1.2

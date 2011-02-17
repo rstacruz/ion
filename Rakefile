@@ -1,4 +1,5 @@
-$:.unshift File.expand_path('../test', __FILE__)
+$:.push File.expand_path('../test', __FILE__)
+$:.push *Dir[File.expand_path('../vendor/*/lib', __FILE__)]
 
 require 'fileutils'
 
