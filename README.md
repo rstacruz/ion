@@ -269,6 +269,49 @@ Or you may also take advantage of Ruby closures:
     name = @name
     Book.ion.search { text :name, name }         # good
 
+### Using with Sequel
+
+Ion comes with an optional plugin for [Sequel](http://sequel.rubyforge.org) models.
+
+    require 'ion/sequel'
+
+    class Author < Sequel::Model
+      plugin :ion_indexable
+
+      # Define indices
+      ion { text :title }
+    end
+
+    Author.ion.search { .. }
+
+### Using with Rails/ActiveRecord
+
+For Rails 3/Bundler, add it to your Gemfile.
+
+    # Gemfile
+    gem 'ion'
+
+For legacy Rails 2.x, add ion in your initializer's gems.
+
+    # config/environment.rb (Rails v2.x)
+    Rails::Initializer.run do |config|
+      config.gem 'ion'
+
+In your records:
+
+    class Author < ActiveRecord::Base
+      include Ion::Entity
+
+      # Define indices
+      ion { text :title }
+
+      # Define hooks
+      after_save     :update_ion_indices
+      before_destroy :delete_ion_indices
+    end
+
+(To do: automate this with an `acts_as_ion_indexable` plugin for Rails)
+
 Testing
 -------
 

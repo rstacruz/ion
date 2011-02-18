@@ -14,3 +14,11 @@ To do list
  - Client: implement remote searching
 
  - Client: implement remote indexing
+
+ - Fuzzy indexing for autocompletes
+
+ - Boolean indexing for flags (`ion { bool :available? }`)
+
+ - Rails `acts_as_ion_indexable`
+
+ - Test `ion/sequel`
