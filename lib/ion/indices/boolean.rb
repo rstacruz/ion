@@ -1,7 +1,7 @@
 module Ion
 class Indices::Boolean < Indices::Text
   def index(record)
-    value = !! value_for(record)
+    value = value_for(record)
     value = bool_to_str(value)
     refs  = references_key(record)
 
@@ -15,8 +15,16 @@ class Indices::Boolean < Indices::Text
   end
 
 protected
-  def bool_to_str(bool)
-    (!!bool) ? "1" : "0"
+  def bool_to_str(value)
+    str_to_bool(value) ? "1" : "0"
+  end
+
+  def str_to_bool(value)
+    value = value.downcase  if value.is_a?(String)
+    case value
+      when 'false', false, '0', 0 then false
+      else true
+    end
   end
 end
 end

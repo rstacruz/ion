@@ -160,11 +160,12 @@ Limit your searches like so:
     # Reset
     results.range :all
 
-### Number and boolean indices
+### Numeric and boolean indices
 
     class Recipe < Ohm::Model
       attribute :serving_size
       attribute :kosher
+      attribute :name
 
       ion {
         number  :serving_size         # Define a number index
@@ -179,6 +180,17 @@ Limit your searches like so:
     Recipe.ion.search { number :serving_size, gt:2, lt:5 }   # 2 < n < 5
     Recipe.ion.search { number :serving_size, min: 4 }       # n >= 4
     Recipe.ion.search { number :serving_size, max: 10 }      # n <= 10
+
+Boolean indexing is a bit forgiving. You can pass it a string
+and it will try to guess what it means.
+
+    a = Recipe.create kosher: true
+    b = Recipe.create kosher: 'false'
+    c = Recipe.create kosher: false
+    d = Recipe.create kosher: 1
+    e = Recipe.create kosher: 0
+
+    Recipe.ion.search { boolean :kosher, true }  # Returns a and d
 
 ### Sorting
 

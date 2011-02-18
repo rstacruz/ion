@@ -23,7 +23,9 @@ Most of these changes are in preparation for a client/server architecture.
  * Implement an `Ion::Wrapper` class so that your app does not need to be
    loaded to perform searches.
 
- * Implement numeric indices. (`ion { number :play_count }`)
+ * Implement numeric indices. (`ion { number :tracks_count }`)
+
+    * Numeric indices support arrays. (`def tracks_count() [1, 3, 5] end`)
 
  * Implement boolean indices. (`ion { boolean :available }`)
 
