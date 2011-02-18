@@ -4,9 +4,10 @@ module Indices
   autoload :Number,    "#{Ion::PREFIX}/indices/number"
   autoload :Metaphone, "#{Ion::PREFIX}/indices/metaphone"
   autoload :Sort,      "#{Ion::PREFIX}/indices/sort"
+  autoload :Boolean,   "#{Ion::PREFIX}/indices/boolean"
 
   def self.names
-    [ :text, :number, :metaphone, :sort ]
+    [ :text, :number, :metaphone, :sort, :boolean ]
   end
 
   def self.get(name)

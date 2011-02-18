@@ -47,14 +47,16 @@ protected
     record.instance_eval &@lambda
   end
 
-  # Returns the index key
-  # Example: Ion:Album:text:title
+  # Returns the index key. Usually a zset.
+  # @example Ion:Album:text:title
   def index_key
     @type ||= self.class.name.split(':').last.downcase
     @options.key[@type][self.name]
   end
 
-  # Ion:Album:references:1:text
+  # Returns the key that holds the list of other keys that is used by a
+  # given record. This is a set.
+  # @example Ion:Album:references:1:text
   def self.references_key(record)
     @type ||= self.name.split(':').last.downcase
 

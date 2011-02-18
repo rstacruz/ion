@@ -17,8 +17,6 @@ To do list
 
  - Fuzzy indexing for autocompletes
 
- - Boolean indexing for flags (`ion { bool :available? }`)
-
  - Test the Rails `acts_as_ion_indexable`
 
  - Test the Sequel `plugin :ion_indexable`

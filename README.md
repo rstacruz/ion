@@ -160,15 +160,19 @@ Limit your searches like so:
     # Reset
     results.range :all
 
-### Number indices
+### Number and boolean indices
 
     class Recipe < Ohm::Model
       attribute :serving_size
+      attribute :kosher
 
       ion {
-        number :serving_size         # Define a number index
+        number  :serving_size         # Define a number index
+        boolean :kosher
       }
     end
+
+    Recipe.ion.search { boolean :kosher, true }
 
     Recipe.ion.search { number :serving_size, 1 }            # n == 1
     Recipe.ion.search { number :serving_size, gt:1 }         # n > 1
@@ -284,7 +288,7 @@ Ion comes with an optional plugin for [Sequel](http://sequel.rubyforge.org) mode
 
     Author.ion.search { .. }
 
-### Using with Rails/ActiveRecord
+### Using with Rails
 
 For Rails 3/Bundler, add it to your Gemfile.
 
