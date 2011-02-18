@@ -10,7 +10,7 @@ class Ion::Client
   attr_reader :error
 
   def initialize(options={})
-    @base_uri = options.delete(:url) || 'http://127.0.0.1:8080'
+    @base_uri = options.delete(:url) || ENV['ION_URL'] || 'http://127.0.0.1:8082'
   end
 
   def ok?
