@@ -3,7 +3,12 @@ class Indices::Number < Indices::Text
   MARGIN = 0.0001
 
   def index(record)
-    value = value_for(record).to_f
+    value = value_for(record)
+    [*value].each { |v| index_value record, v.to_f }
+  end
+    
+  def index_value(record, value)
+    value = value
     refs  = references_key(record)
 
     index_key.zadd value, record.id

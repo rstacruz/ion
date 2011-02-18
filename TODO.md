@@ -20,3 +20,7 @@ To do list
  - Test the Rails `acts_as_ion_indexable`
 
  - Test the Sequel `plugin :ion_indexable`
+
+ - Number array indexing? (`ion { number :employee_ids }` + `employee_ids().is_a?(Array)`)
+
+ - Text array indexing (`ion { enum :tags }`)

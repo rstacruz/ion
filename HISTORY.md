@@ -23,6 +23,14 @@ Most of these changes are in preparation for a client/server architecture.
  * Implement an `Ion::Wrapper` class so that your app does not need to be
    loaded to perform searches.
 
+ * Implement numeric indices. (`ion { number :play_count }`)
+
+ * Implement boolean indices. (`ion { boolean :available }`)
+
+ * Add preliminary support for Rails. (`require 'ion/extras/activerecord'` + `acts_as_ion_indexable`)
+
+ * Add preliminary support for Sequel. (`require 'ion/extras/sequel'` + `Model.plugin :ion_indexable`)
+
 v0.0.1 -- Feb 13, 2011
 ----------------------
 
