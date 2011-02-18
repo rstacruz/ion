@@ -273,7 +273,7 @@ Or you may also take advantage of Ruby closures:
 
 Ion comes with an optional plugin for [Sequel](http://sequel.rubyforge.org) models.
 
-    require 'ion/sequel'
+    require 'ion/extras/sequel'
 
     class Author < Sequel::Model
       plugin :ion_indexable
@@ -289,28 +289,34 @@ Ion comes with an optional plugin for [Sequel](http://sequel.rubyforge.org) mode
 For Rails 3/Bundler, add it to your Gemfile.
 
     # Gemfile
-    gem 'ion'
+    gem 'ion', :require_as => 'ion/extras/activerecord'
 
-For legacy Rails 2.x, add ion in your initializer's gems.
+Create an Ion config file.
 
-    # config/environment.rb (Rails v2.x)
-    Rails::Initializer.run do |config|
-      config.gem 'ion'
+    # config/ion.yml
+    development:
+      :url: redis://127.0.0.1:6579/0
+    test:
+      :url: redis://127.0.0.1:6579/1
+    production:
+      :url: redis://127.0.0.1:6579/1
 
-In your records:
+Have it connect to Ion on startup.
+
+    # config/initializers/ion.rb
+    spec = YAML.load_file("#{Rails.root.to_s}/config/ion.yml")[Rails.env]
+    Ion.connect spec  if spec
+
+In your models:
 
     class Author < ActiveRecord::Base
-      include Ion::Entity
+      acts_as_ion_indexable
 
       # Define indices
       ion { text :title }
-
-      # Define hooks
-      after_save     :update_ion_indices
-      before_destroy :delete_ion_indices
     end
 
-(To do: automate this with an `acts_as_ion_indexable` plugin for Rails)
+(To do: maybe an `ion-rails` gem with generators et al)
 
 Testing
 -------

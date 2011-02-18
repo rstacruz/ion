@@ -19,6 +19,6 @@ To do list
 
  - Boolean indexing for flags (`ion { bool :available? }`)
 
- - Rails `acts_as_ion_indexable`
+ - Test the Rails `acts_as_ion_indexable`
 
- - Test `ion/sequel`
+ - Test the Sequel `plugin :ion_indexable`
