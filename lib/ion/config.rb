@@ -5,7 +5,9 @@ class Ion::Config < OpenStruct
 
   def defaults
     @defaults ||= {
-      :ignored_words => %w(a it at the)
+      :stopwords => %w(a an and are as at be but by for if in into is) +
+                    %w(it no not of on or s such t that the their then) +
+                    %w(there these they this to was will with)
     }
   end
 

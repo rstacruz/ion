@@ -47,7 +47,7 @@ class IonTest < Test::Unit::TestCase
 
   test "multi keywords fail" do
     album  = Album.create title: "Mingus at the Bohemia"
-    search = Album.ion.search { text :title, "bohemia is it" }
+    search = Album.ion.search { text :title, "bohemia helicopter" }
 
     assert_equal [], search.ids.sort
   end

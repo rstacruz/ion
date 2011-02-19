@@ -11,12 +11,12 @@ class ConfigTest < Test::Unit::TestCase
     assert @config.is_a?(Ion::Config)
   end
 
-  test "ignored words" do
-    assert @config.ignored_words.include?('a')
+  test "stopwords" do
+    assert @config.stopwords.include?('a')
   end
 
   test "question mark" do
-    assert @config.ignored_words?
+    assert @config.stopwords?
 
     assert ! @config.foobar?
     @config.foobar = 2

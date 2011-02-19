@@ -1,13 +1,16 @@
 module Ion::Stringer
   def self.sanitize(str)
     return ''  unless str.is_a?(String)
-    str.downcase.force_encoding('UTF-8')
+
+    # Also remove special characters ("I.B.M. can't" => "ibm cant")
+    str.downcase.gsub(/[\.'"]/,'').force_encoding('UTF-8')
   end
 
   # "Hey,  yes you." => %w(hey yes you)
   def self.keywords(str)
     return Array.new  unless str.is_a?(String)
-    split_words sanitize(str)
+    split = split_words(sanitize(str))
+    split.reject { |s| Ion.config.stopwords.include?(s) }
   end
 
   def self.split_words(str)

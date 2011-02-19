@@ -217,6 +217,18 @@ Note that this sorting (unlike in Ohm, et al) is case insensitive,
 and takes English articles into account (eg, "The Beatles" will
 come before "Rolling Stones").
 
+Stopwords
+---------
+
+Anything in `Ion.config.stopwords` will be ignored. It currently
+has a bunch of default English stopwords (a, it, the, etc)
+
+    # Configure it to use Polish stopwords
+    Ion.config.stopwords = %w(a aby ach acz aczkolwiek aj tej z) # and so on
+
+    # Same as searching for 'slow'
+    Album.ion.search { text :title, "slow z tej" }
+
 Extending Ion
 -------------
 
@@ -248,10 +260,17 @@ Or extend the DSL
 Features in the works
 ---------------------
 
-Stuff that's not implemented yet, but will be.
+A RESTful [ion-server](http://github.com/rstacruz/ion-server) is under heavy development.
 
-    # TODO: search keyword blacklist
-    Ion.config.ignored_words += %w(at it the)
+    # An Ion server instance
+    Ion.connect ion: 'http://127.0.0.1:8082'
+
+    # This will be done on the server
+    Album.ion.search { ... }
+
+Better support for European languages by transforming special characters. (`ü` => `ue`)
+
+Other stuff that's not implemented yet, but will be:
 
     Item.ion.search {                  # TODO: Quoted searching
       text :title, 'apple "MacBook Pro"'

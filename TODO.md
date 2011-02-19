@@ -23,6 +23,6 @@ To do list
 
  - Number array indexing? (`ion { number :employee_ids }` + `employee_ids().is_a?(Array)`)
 
- - Text array indexing (`ion { enum :tags }`)
+ - Text array indexing (`ion { list :tags }`)
 
  - Boolean indexing should be more forgiving
