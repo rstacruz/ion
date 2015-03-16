@@ -1,13 +1,14 @@
+require 'bundler/gem_tasks'
+require 'fileutils'
 $:.push File.expand_path('../test', __FILE__)
 $:.push *Dir[File.expand_path('../vendor/*/lib', __FILE__)]
 
-require 'fileutils'
 
 module Util
   def redis_port
     6385
   end
-  
+
   def redis_url(db=0)
     "redis://127.0.0.1:#{redis_port}/#{db}"
   end

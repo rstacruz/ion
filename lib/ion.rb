@@ -2,10 +2,10 @@ require 'redis'
 require 'nest'
 require 'text'
 require 'ostruct'
+require 'ion/version'
+
 
 module Ion
-  VERSION = "0.0.2"
-
   PREFIX = File.join(File.dirname(__FILE__), 'ion')
 
   # How long until search keys expire.
