@@ -403,7 +403,7 @@ Ion.connect spec  if spec
 
 In your models:
 
-```
+```ruby
 class Author < ActiveRecord::Base
   acts_as_ion_indexable
 
