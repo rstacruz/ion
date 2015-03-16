@@ -11,67 +11,86 @@ Usage
 
 Ion needs Redis.
 
-    require 'ion'
-    Ion.connect url: 'redis://127.0.0.1:6379/0'
+```ruby
+require 'ion'
+Ion.connect url: 'redis://127.0.0.1:6379/0'
+```
 
 Any ORM will do. As long as you can hook it to update Ion's indices, you'll be fine.
 
-    class Album < Ohm::Model
-      include Ion::Entity
-      include Ohm::Callbacks  # for `after` and `before`
+```ruby
+require 'ohm/contrib'
 
-      # Say you have these fields
-      attribute :name
-      attribute :artist
+class Album < Ohm::Model
+  include Ion::Entity
+  include Ohm::Callbacks  # for `after` and `before`, part of gem 'ohm-contrib'
 
-      # Set it up to be indexed
-      ion {
-        text :name
-        metaphone :artist
-      }
+  # Say you have these fields
+  attribute :name
+  attribute :artist
 
-      # Just call these after saving/deleting
-      after  :save,   :update_ion_indices
-      before :delete, :delete_ion_indices
-    end
+  # Set it up to be indexed
+  ion {
+    text :name
+    metaphone :artist
+  }
+
+  # Just call these after saving/deleting
+  def after_save
+    update_ion_indices
+  end
+
+  def after_delete
+    delete_ion_indices
+  end
+end
+```
 
 Searching is easy:
 
-    results = Album.ion.search {
-      text :name, "Dancing Galaxy"
-    }
+```ruby
+results = Album.ion.search {
+  text :name, "Dancing Galaxy"
+}
 
-    results = Album.ion.search {
-      metaphone :artist, "Astral Projection"
-    }
+results = Album.ion.search {
+  metaphone :artist, "Astral Projection"
+}
+```
 
 The results will be an `Enumerable` object. Go ahead and iterate as you normally would.
 
-    results.each do |album|
-      puts "Album '#{album.name}' (by #{album.artist})"
-    end
+```ruby
+results.each do |album|
+  puts "Album '#{album.name}' (by #{album.artist})"
+end
+```
 
 You can also get the raw results easily.
 
-    results.to_a  #=> [<#Album>, <#Album>, ... ]
-    results.ids   #=> ["1", "2", "10", ... ]
+```ruby
+results.to_a  #=> [<#Album>, <#Album>, ... ]
+results.ids   #=> ["1", "2", "10", ... ]
+```
 
 Features
 --------
 
 ### Custom indexing functions
 
-    class Book < Ohm::Model
-      attribute :name
-      attribute :synopsis
-      reference :author, Person
+```ruby
+class Book < Ohm::Model
+  attribute :name
+  attribute :synopsis
+  reference :author, Person
 
-      ion {
-        text(:author) { author.name }              # Supply your own indexing function
-      }
-    end
+  ion {
+    text(:author) { author.name }              # Supply your own indexing function
+  }
+end
 
-    Book.ion.search { text :author, "Patrick Suskind" }
+Book.ion.search { text :author, "Patrick Suskind" }
+```
 
 ### Nested conditions
 
