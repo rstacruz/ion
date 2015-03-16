@@ -1,3 +1,5 @@
+[![Gem Version](https://img.shields.io/gem/v/ion.svg?style=flat)](https://rubygems.org/gems/ion)
+
 Ion
 ===
 
