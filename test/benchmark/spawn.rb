@@ -9,7 +9,6 @@ class << BM
     re.del(*keys)  if keys.any?
 
     k = Album.send :key
-    puts "k = #{k}"
     Batch.each((1..size).to_a) do |i|
       #Album.create title: lorem, body: lorem
       k[:all].sadd i
