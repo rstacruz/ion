@@ -19,4 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency "redis", "~> 2.1"
   s.add_dependency "text", "~> 0.2.0"
   s.add_development_dependency 'rake', '~> 10.0'
+  s.add_development_dependency 'ohm', '~> 2.2'
+  s.add_development_dependency 'ohm-contrib', '~> 2.2'
+  s.add_development_dependency 'batch', '~> 1.0.4'
 end
