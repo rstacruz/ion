@@ -12,7 +12,13 @@ class IT::Song < Ohm::Model
     metaphone :body
   }
 
-  after :save, :update_ion_indices
+  def after_save
+    update_ion_indices
+  end
+
+  def after_delete
+    delete_ion_indices
+  end
 end
 
 Song = IT::Song
