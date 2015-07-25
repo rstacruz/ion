@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency "nest", "~> 1.0"
-  s.add_dependency "redis", "~> 2.1"
+  s.add_dependency "redis", "~> 3.2.1"
   s.add_dependency "text", "~> 0.2.0"
   s.add_development_dependency 'rake', '~> 10.0'
 end
