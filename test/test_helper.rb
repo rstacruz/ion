@@ -8,7 +8,7 @@ require_relative './p_helper'
 require_relative './common_helper'
 #require_relative './redis_debug'
 
-Ion.connect url: (ENV['REDIS_URL'] || 'redis://127.0.0.1:6379/0')
+Ion.connect url: (ENV['REDIS_URL'] || 'redis://127.0.0.1:6379/15')
 
 class Test::Unit::TestCase
   include LoremHelper
@@ -68,8 +68,13 @@ class IT::Album < Ohm::Model
     sort :title
   }
 
-  after  :save,   :update_ion_indices
-  before :delete, :delete_ion_indices
+  def after_save
+    update_ion_indices
+  end
+
+  def after_delete
+    delete_ion_indices
+  end
 end
 
 Album = IT::Album

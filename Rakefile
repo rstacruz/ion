@@ -6,7 +6,7 @@ $:.push *Dir[File.expand_path('../vendor/*/lib', __FILE__)]
 
 module Util
   def redis_port
-    6385
+    6379
   end
 
   def redis_url(db=0)

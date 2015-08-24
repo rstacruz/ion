@@ -59,8 +59,13 @@ module IonBenchmark
       text :body
     }
 
-    # after  :save,   :update_ion_indices
-    # before :delete, :delete_ion_indices
+    def after_save
+      update_ion_indices
+    end
+
+    def after_delete
+      delete_ion_indices
+    end
   end
 end
 
